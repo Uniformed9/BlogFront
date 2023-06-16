@@ -35,7 +35,7 @@
             </el-form-item>
             <el-form-item style="text-align: right">
                 <el-button @click="resetForm">取消</el-button>
-                <el-button type="primary" @click="userRegister">登录</el-button>
+                <el-button type="primary" @click="userRegister">注册</el-button>
             </el-form-item>
         </el-form>
     </el-dialog>
@@ -62,13 +62,13 @@ const FormRules= {
     username: [
         // 必填，提示消息，鼠标焦点消失时触发
         {required: true, message: "请输入用户名", trigger: "blur"},
-        {min: 2, max: 10, message: "长度在2-10个字符之间"}
+        {min: 2, max: 10, message: "长度在2-10个字符之间",trigger: "blur"}
     ],
         // 验证用户是否合法
         nickname: [
         // 必填，提示消息，鼠标焦点消失时触发
         {required: true, message: "请输入昵称", trigger: "blur"},
-        {min: 2, max: 10, message: "长度在2-10个字符之间"}
+        {min: 2, max: 10, message: "长度在2-10个字符之间",trigger: "blur"}
     ],
         // 验证密码是否合法
         password: [
