@@ -1,7 +1,7 @@
 
 import { createApp } from 'vue'
 import App from './App.vue'
-
+// import axios from "@/components/request/request";
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import router from "@/components/router/router";

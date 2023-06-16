@@ -60,11 +60,11 @@
             </div>
 <!--            显示头像-->
             <div v-else class="loginInfo">
-                <el-avatar :src="userInfo.avatar"></el-avatar>
+                <el-avatar :src="user.avatar"></el-avatar>
                 <div class="user-option">
-                    <h3 class="web-font nickname">{{userInfo.nickname}}</h3>
-                    <p v-if="administrator" class="logout" @click="manageBlog">管理博客</p>
-                    <p class="logout" @click="logout">退出登录</p>
+<!--                    <h3 class="web-font nickname">{{user.nickName}}</h3>-->
+<!--                    <p v-if="administrator" class="logout" @click="manageBlog">管理博客</p>-->
+<!--                    <p class="logout" @click="logout">退出登录</p>-->
                 </div>
             </div>
 <!--            显示登录注册页面-->
@@ -74,20 +74,17 @@
     </div>
 </template>
 
-<script >
+<script setup>
 import {ref, reactive, onMounted, computed} from "vue";
 import {Menu} from "@element-plus/icons-vue";
 import {useStore,mapState} from "vuex";
 import {useRouter} from "vue-router";
 import LoginPage from "@/components/login/LoginPage.vue"
 import RegisterPage from "@/components/login/RegisterPage.vue"
-export  default {
-    name:"NavBar",
-    components: {Menu,LoginPage,RegisterPage},
-    props:['msg'],
-    setup(){
+
+
         let shade=ref(0);
-        let isCollapse= ref(false);
+        // let isCollapse= ref(false);
         let    menuHiddenVisiable=ref(false);
         let    headerBottom=ref(0);
         let activeIndex=ref("1");
@@ -134,6 +131,9 @@ export  default {
                 '4': 'ChatDotSquare',
                 '5': 'User',
         };
+        const user=computed(()=>{
+            return store.state.user
+        })
         //vue3新写法
         const changePage=(name) =>{
             // console.log(name)
@@ -163,9 +163,6 @@ export  default {
         }
 
         //返回登录状态，computed实时计算
-        const logined=computed(()=>{
-            return store.state.userInfo === null
-        })
 
         const storeStsteFns = mapState(['userInfo', 'administrator'])
         const storeState = {}
@@ -193,33 +190,11 @@ export  default {
                scrollFlag.value = false
             }
         }
+        const logined=computed(()=>{
+            return user.value.id === ''
+        })
         //针对滚轮的函数
         onMounted(()=>{window.addEventListener('scroll', handleScroll);})
-        return{
-            menulist,
-            iconsObj,
-            shade,
-            isCollapse,
-            menuHiddenVisiable,
-            headerBottom,
-            activeIndex,
-            queryInfo,
-            searching,
-            searchList,
-            changePage,
-            checkInput,
-            menuExpend,
-            notSearching,
-            getBlogInfo,
-            showRFV,
-            showLFV,
-            logined,
-            ...storeState,
-
-        }
-    }
-
-}
 </script>
 
 <style scoped lang="less">

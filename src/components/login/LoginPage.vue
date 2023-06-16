@@ -1,10 +1,11 @@
 
 <template>
+
     <el-dialog class="login_dialog" title="请登录" v-model="loginFormVisiable" @close="resetLoginForm" width="400px" center>
         <el-form ref="loginFormRef" :model="loginForm" :rules="loginFormRules" label-width="60px" class="login_form">
             <!--        用户名-->
-            <el-form-item prop="username" label="账号">
-                <el-input v-model="loginForm.username"></el-input>
+            <el-form-item prop="userName" label="账号">
+                <el-input v-model="loginForm.userName"></el-input>
             </el-form-item>
             <!--        密码-->
             <el-form-item prop="password" label="密码">
@@ -14,6 +15,7 @@
                 <el-button @click="resetLoginForm">取消</el-button>
                 <el-button type="primary" @click="userLogin(loginFormRef)">登录</el-button>
             </el-form-item>
+
         </el-form>
     </el-dialog>
 </template>
@@ -22,9 +24,9 @@
 import {useMapState} from "@/components/common/useMapState";
 import {useStore} from "vuex";
 import {useRouter} from "vue-router";
-import {getCurrentInstance, onMounted, reactive, ref} from "vue";
+import {computed, getCurrentInstance, onMounted, reactive, ref} from "vue";
 import {ElMessage} from "element-plus";
-import {post} from "@/components/request/request";
+import {post,postWithConfig} from "@/components/request/request";
 const {loginFormVisiable}=useMapState(['loginFormVisiable'])
 const store =useStore()
 const router=useRouter()
@@ -32,11 +34,11 @@ const loginFormRef=ref()
 const {proxy}=getCurrentInstance()
 const httpUrl=proxy.$key
 
-
 const loginForm=reactive( {
-    username: '',
+    userName: '',
     password: ''
 })
+
 
             // 表单验证规则对象
 const loginFormRules=reactive( {
@@ -52,6 +54,7 @@ const loginFormRules=reactive( {
         {min: 6, max: 10, message: "长度在 6 到 10 个字符", trigger: "blur"}
     ]
 })
+
 //调试信息
 onMounted(() => {
     // console.log(httpUrl);
@@ -59,31 +62,53 @@ onMounted(() => {
 const resetLoginForm=()=> {
     store.commit('cancelLFV')
     loginFormRef.value.resetFields();
-}
 
+}
+const user=computed(()=>{
+    return store.state.user
+})
+
+const download=async (avatar)=>{
+    if(user.value.avatar==='')return
+    else{
+        await postWithConfig(httpUrl+"/file/download",{location:avatar},{headers:{ "content-type": "application/x-www-form-urlencoded" }})
+    }
+}
 //用户登录
 const userLogin=async(loginFormRef)=>{
     if (!loginFormRef) return
     loginFormRef.validate(async (valid) => {
         if (valid) {
+            // console.log(loginForm)
+            try{
 
-            const { data, msg } = await post(httpUrl + "/user/login", loginForm).catch(reason => {console.log(reason)})
-            if (data === null) {
-                console.log("fdsfsdf")
-                ElMessage({
-                    message: msg,
-                    type: 'error',
-                })
-            } else {
-                console.log("before")
-                store.commit("constructUser",data)
-                console.log("after")
-                ElMessage({
-                    message: '登陆成功',
-                    type: 'success',
-                })
-                await router.push({ path: "/test" })
+                const { data, msg } = await post(httpUrl + "/user/login", loginForm)
+
+                if (data === null) {
+
+                    ElMessage({
+                        message: msg,
+                        type: 'error',
+                    })
+                } else {
+                    console.log(data)
+                    store.commit("constructUser",data)
+                    //调用
+                    console.log(store.state.user.userName)
+                    ElMessage({
+                        message: '登陆成功',
+                        type: 'success',
+                    })
+                    store.commit("cancelLFV")
+                    await download(user.value.avatar)
+                   await router.push({ path: "/" })
+                    //关闭页面
+
+                }
+            }catch(err){
+                console.log(err)
             }
+
         } else {
             ElMessage({
                 message: "请填写字段",

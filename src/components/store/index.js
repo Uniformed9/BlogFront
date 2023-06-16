@@ -1,5 +1,5 @@
 import { createStore } from 'vuex'
-import {reactive} from "vue";
+ // import {reactive} from "vue";
 export default createStore({
     state: {
         userInfo: JSON.parse(window.sessionStorage.getItem('user')),
@@ -7,14 +7,17 @@ export default createStore({
         administrator:JSON.parse(window.sessionStorage.getItem('user'))!==null&&JSON.parse(window.sessionStorage.getItem('user')).type==='1',
         loginFormVisiable:false,
         registorFormVisiable:false,
+        haveUser:false,
         pageName:'index',
-        user: reactive({
+        user: {
             id:'',
             userName:'',
             password:'',
             status:'',
-            token:''
-        })
+            nickName:'',
+            token:'',
+            avatar:''
+        }
     },
     mutations: {
         // 改变页面
@@ -25,14 +28,28 @@ export default createStore({
         getUserInfo(state){
             state.userInfo = JSON.parse(window.sessionStorage.getItem('user'))
             state.token = JSON.parse(window.sessionStorage.getItem('token'))
-            if (state.userInfo !== null && state.userInfo.type == '1') {
+            if (state.userInfo !== null && state.userInfo.type === '1') {
                 state.administrator = true
             } else {
                 state.administrator = false
             }
         },
         constructUser(state,data){
-            state.user=data
+           state.user={
+               id:data.id,
+               userName:data.userName,
+               password:data.password,
+               status:data.status,
+               nickName:data.nickName,
+               avatar:data.avatar,
+               token:data.token,
+           }
+        },
+        showUser(state){
+            state.haveUser = true
+        },
+        cancelUser(state){
+            state.haveUser=false
         },
         showLFV(state){
             state.loginFormVisiable = true
