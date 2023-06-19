@@ -45,6 +45,18 @@ export default createStore({
                token:data.token,
            }
         },
+        clearUser(state){
+            state.user.userName=""
+            state.user.avatar=""
+            state.user.id=""
+            state.user.token=""
+            state.user.nickName=""
+            state.user.password=""
+            state.haveUser=false
+            state.registorFormVisiable=false
+            state.loginFormVisiable=false
+
+        },
         showUser(state){
             state.haveUser = true
         },

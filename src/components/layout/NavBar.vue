@@ -62,9 +62,9 @@
             <div v-else class="loginInfo">
                 <el-avatar :src="user.avatar"></el-avatar>
                 <div class="user-option">
-<!--                    <h3 class="web-font nickname">{{user.nickName}}</h3>-->
-<!--                    <p v-if="administrator" class="logout" @click="manageBlog">管理博客</p>-->
-<!--                    <p class="logout" @click="logout">退出登录</p>-->
+                    <h3 class="web-font nickname">{{user.nickName}}</h3>
+                    <p v-if="!logined" class="logout" @click="manageBlog">管理博客</p>
+                    <p class="logout" @click="logout">退出登录</p>
                 </div>
             </div>
 <!--            显示登录注册页面-->
@@ -81,6 +81,7 @@ import {useStore,mapState} from "vuex";
 import {useRouter} from "vue-router";
 import LoginPage from "@/components/login/LoginPage.vue"
 import RegisterPage from "@/components/login/RegisterPage.vue"
+import {ElMessage} from "element-plus";
 
 
         let shade=ref(0);
@@ -134,6 +135,18 @@ import RegisterPage from "@/components/login/RegisterPage.vue"
         const user=computed(()=>{
             return store.state.user
         })
+    const manageBlog=()=>{
+            router.push("/about")
+    }
+    const logout=()=>{
+
+            store.commit("clearUser")
+            ElMessage({
+                message: '退出登录成功',
+                type: 'success',
+            })
+            router.push("/index")
+    }
         //vue3新写法
         const changePage=(name) =>{
             // console.log(name)

@@ -1,40 +1,18 @@
 <template>
     <div id="building">
         <NavBar></NavBar>
-        <el-main>
-            <el-row style="height: 95vh">
-                <el-col :span="24" style="height: 100%">
-                    <el-card shadow="none" class="welcome">
-                        <h1 class="tit">
-                            Uniのblog
-                            <div class="border"></div>
-
-                        </h1>
-
-                        <h2 class="intro">{{intro}}</h2>
-                        <div class="bounce down" @click="startRead">
-                            <el-icon :size="20" style="color: white;">
-                                <ArrowDown />
-                            </el-icon>
-                        </div>
-                    </el-card>
-                </el-col>
-            </el-row>
-        </el-main>>
-
-
+        <router-view></router-view>
     </div>
 
 </template>
 <script>
-
-import NavBar from "@/components/layout/NavBar.vue"
+import NavBar from "@/components/layout/NavBar.vue";
 export default {
     name:"pageIndex",
     components: {NavBar},
     setup(){
         let intro="欢迎来到我的个人博客";
-        console.log("test")
+
         const startRead=async ()=>{
 
         };
