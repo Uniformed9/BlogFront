@@ -6,6 +6,18 @@ import axios from './http'
  * @param params [请求时携带的参数]
  * @param headers
  */
+
+export function getWithOutParam(url){
+    return new Promise((resolve,reject)=>{
+        axios.get(url).then(res=>{
+            resolve(res.data);
+        }).catch(err=>{
+            reject(err.data)
+        })
+    });
+}
+
+
 export function get(url, params){
     return new Promise((resolve, reject) =>{
         axios.get(url, {

@@ -1,97 +1,198 @@
 <template>
-    <div >
-      <el-header id="building">
-        <NavBar></NavBar>
-          <el-row style="height: 95vh">
-            <el-col :span="24" style="height: 100%">
-              <el-card shadow="none" class="welcome">
-                <h1 class="tit">
-                  Uniのblog
-                  <div class="border"></div>
-                </h1>
-                <h2 class="intro">{{intro}}</h2>
-                <div class="bounce down" @click="startRead">
-                  <el-icon :size="20" style="color: white;">
-                    <ArrowDown/>
-                  </el-icon>
+  <div >
+    <el-header id="building">
+      <NavBar></NavBar>
+      <el-row style="height: 95vh">
+        <el-col :span="24" style="height: 100%">
+          <el-card shadow="none" class="welcome">
+            <h1 class="tit">
+              Uniのblog
+              <div class="border"></div>
+            </h1>
+            <h2 class="intro">{{intro}}</h2>
+            <div class="bounce down" @click="startRead">
+              <el-icon :size="20" style="color: white;">
+                <ArrowDown/>
+              </el-icon>
+            </div>
+          </el-card>
+        </el-col>
+      </el-row>
+
+    </el-header>
+
+
+      <el-container class="layout">
+        <el-main id="index" class="animate__animated animate__fadeInUp" >
+          <el-row>
+            <el-col :sm="6">
+              <div class="aside-content">
+                <el-card class="card-widget">
+                <div class="card-title"><span>热门博客:</span></div>
+                  <div class="card-list">博客1</div>
+                  <div class="card-list">博客2</div>
+                </el-card>
+              </div>
+
+          </el-col>
+          <el-col :sm="18">
+            <div class="recent-posts" id="recent-posts">
+              <el-card shadow="hover">
+                <div class="recent-post-item">
+                  <div class="post-cover">
+                    <a href="" title="111">
+                      <el-image class="blog-image"
+                                src="https://s2.loli.net/2022/04/26/JILkS5gp9cr24yv.jpg"></el-image>
+                    </a>
+                  </div>
+                  <div class="recent-post-info" >
+                  <div class="article-title-date">
+                    <a class="article-title" title="111">111</a>
+                    <span class="article-date" >createddate</span>
+                  </div>
+                  <div>
+                    <div class="article-description">
+                      qewrtyuiopiuytrewqertyutrwertyuyterweqwrtyuutrerqwertyreewewwrtyuytrewqertyqrewtrtyutytewre1234567896543213strdyrtytryrtyrtyrtyrtyrtyrtyrtyry45678976534234567
+                    </div>
+                  </div>
+                </div>
+                  </div>
+
+              </el-card>
+              <el-card>
+                <div class="recent-post-item">
+                  <a href="" title="222">
+                    <el-image class="blog-image"
+                              src="https://challis-yin.github.io/img/404.jpg"></el-image>
+                  </a>
+                  <div class="recent-post-info">
+                    <a class="article-title">222</a>
+                    <span></span>
+                  </div>
                 </div>
               </el-card>
-            </el-col>
-          </el-row>
+            </div>
+          </el-col>
 
-        </el-header>
-        <el-main class="layout">
-          <el-container id="index" class="animate__animated animate__fadeInUp">
-            <el-row gutter="12">
-              <el-col :xs="24" :sm:="17">
-                <el-card style="background-color: rgba(255,255,255,0.9)" class="recent-posts" id="recent-posts">
-                    <div class="recent-post-item" @mouseenter="imageBigger">
-                      <div class="post-cover">
-                        <a href="" title="111">
-                        <el-image class="blog-image"
-                                  src="https://s2.loli.net/2022/04/26/JILkS5gp9cr24yv.jpg"></el-image>
-                        </a>
-                      </div>
-                      <div class="recent-post-info">
-                        <a href="" class="article-title" title="111">11111</a>
-
-                      </div>
-                    </div>
-                </el-card>
-              </el-col>
-            </el-row>
-          </el-container>
+        </el-row>
         </el-main>
+      </el-container>
 
-    </div>
+
+
+  </div>
 </template>
 <script>
 
 import NavBar from "@/components/layout/NavBar.vue"
 import {ArrowDown} from "@element-plus/icons-vue";
-import {nextTick} from "vue";
+import {nextTick, reactive} from "vue";
+import axios from "axios";
+import store from "@/components/store";
 
+
+const httpUrl="http://localhost:8070"
 export default {
-    name:"pageIndex",
+  name: "pageIndex",
   computed: {
+
   },
-    components: { ArrowDown, NavBar},
-  setup(){
-        let intro="欢迎来到我的个人博客";
-        // const startRead=async ()=>{
-        //
-        // };
+  components: {ArrowDown, NavBar},
+  setup() {
+    let intro = "欢迎来到我的个人博客";
+    let show=false
+    let blog=reactive({
+      id:"",
+      commentabled:"",
+      creatTime:"",
+      content:"",
+      description:"",
+      published:"",
+      title:"",
+      updateDate:"",
+      updateTime:"",
+      views:"",
+      userId:"",
+      userNickName:"",
+    })
+
+    const getBlog1 = async () => {
+
+      // const {data, msg} = await getWithOutParam(httpUrl + "/homepage/hotBlogs")
+      //     .catch(error => {
+      //       console.log(error)
+      //     })
+      //
+      // if (data === null) {
+      //   console.log("null")
+      //   ElMessage({
+      //     message: msg,
+      //     type: "error"
+      //   })
+      // } else {
+      //   console.log("before")
+      //   useStore().commit("hotBlogs", data)
+      //   console.log("after")
+      //   ElMessage({
+      //     message: "获取成功",
+      //     type: "success"
+      //   })
+      // }
+      show=true
+
+      // function (res){
+      //   store.commit("hotBlogsListed",{
+      //     data:res.data
+      //   })
+      //   blog=store.state.blog
+    }
 
 
-    function startRead(){
-      nextTick(()=>{
+
+    function startRead() {
+      nextTick(() => {
         document.getElementById("index")
             .scrollIntoView({
-              behavior:'smooth',
-              block:'start'
+              behavior: 'smooth',
+              block: 'start'
             })
       })
     }
 
-    function imageBigger(){
+    function imageBigger() {
 
     }
 
-        return{
-            intro,
-            startRead,
-          imageBigger
-        }
+    return {
+      intro,
+      startRead,
+      imageBigger,
+      getBlog1,
+      blog,
+      show
     }
+
+  },
+
+  mounted() {
+    axios.get(httpUrl+"/blog/12").then(response =>{
+      store.commit("hotBlogsListed",{
+        data:response.data
+      })
+      console.log(this.blog = store.state.blog);
+    }).catch(function (error){
+      console.log(error)
+    })
+  }
 }
 </script>
 <style scoped lang="less">
 #building{
-    background:url("../assets/pageIndex2.png");
-    width:100%;
-    height:100%;
-    //position: fixed;
-    background-size:100% 100%;
+  background:url("../assets/pageIndex2.png");
+  width:100%;
+  height:100%;
+  //position: fixed;
+  background-size:100% 100%;
 }
 
 body {
@@ -502,13 +603,50 @@ ul {
     }
   }
 }
-.blog-image{
-  color: #999999;
-  text-decoration: none;
-  word-wrap: break-word;
+
+@media screen and (max-width: 768px){
+  .recent-post-item .post_cover {
+    -webkit-box-ordinal-group: 1 !important;
+    -moz-box-ordinal-group: 1 !important;
+    -ms-flex-order: 1 !important;
+    order: 1 !important;
+    width: 100%;
+    border-radius: 8px 8px 0 0;
+  }
+}
+
+
+ .recent-post-item .post-cover{
+  overflow: hidden;
+  width: 50%;
+}
+
+
+.blog-image {
+  width: 100%;
+  height: 100%;
+  -webkit-transition: all 0.6s;
+  -moz-transition: all 0.6s;
+  -o-transition: all 0.6s;
+  -ms-transition: all 0.6s;
+  transition: all 0.6s;
+  object-fit: cover;
+  overflow-clip-margin: content-box;
+  overflow: clip;
+  border-style: none;
+}
+.blog-image:hover{
+  transform: scale(1.1);
+  transition: all 0.3s;
+}
+
+el-image {
+  max-width: 100%;
   -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  -o-transition: all 0.2s;
+  -ms-transition: all 0.2s;
   transition: all 0.2s;
-  overflow-wrap: break-word;
 }
 
 
@@ -533,52 +671,79 @@ ul {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  margin: 0 auto;
+  margin: auto;
   padding: 2rem 15px;
   max-width: 1200px;
 }
 
+@media screen and (min-width: 900px){
+.recent-posts {
+    -webkit-box-ordinal-group: 2;
+    -moz-box-ordinal-group: 2;
+    -ms-flex-order: 2;
+    order: 2;
+  }
+}
 
+@media screen and (max-width: 900px){
+  .recent-posts{
+
+  }
+}
+
+.recent-posts {
+
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  -ms-transition: all 0.3s;
+  transition: all 0.3s;
+
+}
+
+.el-card{
+  margin-bottom: 20px;
+}
 
 @media screen and (max-width: 768px){
-  #recent-posts .recent-post-item {
+  .recent-post-item {
     -webkit-box-orient: vertical;
     -moz-box-orient: vertical;
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
     height: auto !important;
-    position: relative;
+    //position: relative;
   }
 }
 
 @media screen and (max-width: 768px) {
-  #recent-posts > .recent-post-item {
+  .recent-post-item {
     border-radius: 12px 12px 8px 8px;
   }
 }
 
-#recent-posts > .recent-post-item {
+.recent-post-item {
   display: -webkit-box;
   display: -moz-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -moz-box-orient: horizontal;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
+  //-webkit-box-orient: horizontal;
+  //-moz-box-orient: horizontal;
+  //-webkit-flex-direction: row;
+  //-ms-flex-direction: row;
+  //flex-direction: row;
   -webkit-box-align: center;
   -moz-box-align: center;
   -ms-flex-align: center;
   -webkit-align-items: center;
   align-items: center;
-  height: 20em;
-  border-radius: 12px 8px 8px 12px;
-  background: var(--card-bg);
-  -webkit-box-shadow: var(--card-box-shadow);
-  box-shadow: var(--card-box-shadow);
+  height: 16em;
+  //border-radius: 12px 8px 8px 12px;
+  //background: var(--card-bg);
+  //-webkit-box-shadow: var(--card-box-shadow);
+  //box-shadow: var(--card-box-shadow);
   -webkit-transition: all 0.3s;
   -moz-transition: all 0.3s;
   -o-transition: all 0.3s;
@@ -588,27 +753,46 @@ ul {
 
 
 
+
 @media screen and (max-width: 768px){
-  #recent-posts .recent-post-item .recent-post-info {
+  .recent-post-item .recent-post-info {
     -webkit-box-ordinal-group: 2 !important;
     -moz-box-ordinal-group: 2 !important;
     -ms-flex-order: 2 !important;
     order: 2 !important;
-    padding: 2rem 0rem 2rem;
+    padding: 1rem 1rem 1.5rem 1rem;
     width: 100%;
-    position: absolute;
-    bottom: 0;
-    background-color: #ffffff;
+    //position: absolute;
+    //bottom: 0;
+    background-color:#ffffff;
   }
 }
-#recent-posts > .recent-post-item >.recent-post-info {
-  display: inline-block;
-  overflow: auto;
-  padding: 40px;
-  width: 100%;
-
+@media screen and (min-width: 768px){
+  .recent-post-item >.recent-post-info {
+    overflow: hidden;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    background-color:#ffffff;
+    //position: relative;
+  }
 }
-#recent-posts > .recent-post-item >.recent-post-info > .article-title {
+
+  .recent-post-item> .recent-post-info{
+    display: inline-block;
+    overflow: hidden;
+    padding: 0 40px;
+    width: 50%;
+  }
+
+.article-title-date{
+  padding: 10px 10px 10px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.article-title {
   margin-bottom: 0.3rem;
   color: var(--text-highlight-color);
   font-size: 1.72em;
@@ -621,4 +805,70 @@ ul {
   -webkit-line-clamp: 2;
 }
 
+.article-date{
+  margin-bottom: 0.3rem;
+  color: var(--text-highlight-color);
+  font-size: 1.3em;
+  line-height: 1.4;
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  -ms-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+  -webkit-line-clamp: 2;
+}
+
+@media screen and (max-width: 768px){
+  .article-description{
+    display: flex;
+    height: auto;
+  }
+}
+
+.article-description{
+  padding: 10px 10px 0 10px;
+  margin-top: 0.3rem;
+  -webkit-line-clamp: 2;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  align-items: center;
+  font-size: 18px;
+  word-break: break-word;
+  text-align: start;
+}
+
+@media screen and (min-width: 900px) {
+  .aside-content{
+    padding-right: 15px;
+  }
+}
+
+.card-title{
+  font-size: 1.5em;
+  font-weight: 500;
+  display: flex;
+}
+
+.card-list{
+  display: flex;
+  padding-left: 15px;
+  font-size: 1rem;
+  margin: 10px 0 10px 0;
+}
+
+.card-widget {
+  //position: relative;
+  overflow: hidden;
+  margin-top: 1rem;
+  padding: 1rem 1.2rem;
+  background: var(--card-bg);
+  -webkit-box-shadow: var(--card-box-shadow);
+  box-shadow: var(--card-box-shadow);
+  -webkit-transition: box-shadow 0.3s;
+  -moz-transition: box-shadow 0.3s;
+  -o-transition: box-shadow 0.3s;
+  -ms-transition: box-shadow 0.3s;
+  transition: box-shadow 0.3s;
+}
 </style>

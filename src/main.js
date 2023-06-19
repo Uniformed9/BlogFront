@@ -1,7 +1,6 @@
 
 import { createApp } from 'vue'
 import App from './App.vue'
-import axios from '@/components/request/http'
 
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
@@ -18,7 +17,6 @@ import '@/assets/css/animate.css'
 const app = createApp(App)
 
 app.config.globalProperties.$key="http://localhost:8070"
-app.config.globalProperties.$blog=axios
 
 app.use(router)
 app.use(store)

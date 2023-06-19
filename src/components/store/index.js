@@ -5,6 +5,7 @@ export default createStore({
         userInfo: JSON.parse(window.sessionStorage.getItem('user')),
         token: JSON.parse(window.sessionStorage.getItem('token')),
         administrator:JSON.parse(window.sessionStorage.getItem('user'))!==null&&JSON.parse(window.sessionStorage.getItem('user')).type==='1',
+        blogInfo:JSON.parse(window.sessionStorage.getItem("blog")),
         loginFormVisiable:false,
         registorFormVisiable:false,
         pageName:'index',
@@ -14,6 +15,20 @@ export default createStore({
             password:'',
             status:'',
             token:''
+        }),
+        blog:reactive({
+            id:"",
+            commentabled:"",
+            creatTime:"",
+            content:"",
+            description:"",
+            published:"",
+            title:"",
+            updateDate:"",
+            updateTime:"",
+            views:"",
+            userId:"",
+            userNickName:"",
         })
     },
     mutations: {
@@ -33,6 +48,9 @@ export default createStore({
         },
         constructUser(state,data){
             state.user=data
+        },
+        hotBlogsListed(state,data){
+            state.blog=data
         },
         showLFV(state){
             state.loginFormVisiable = true
