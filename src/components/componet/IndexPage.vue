@@ -1,8 +1,35 @@
 <script setup>
+import {onMounted, nextTick, getCurrentInstance,ref} from "vue";
+import axios from "@/components/request/http"
+import {useStore} from "vuex";
 let intro="欢迎来到我的个人博客";
-const startRead=async ()=>{
+const store=useStore()
+const {proxy}=getCurrentInstance()
+const httpUrl=proxy.$key
+function startRead() {
+    nextTick(() => {
+        document.getElementById("index")
+            .scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            })
+    })
+}
+onMounted(()=>{
+    console.log("-------")
+    blog.value=1
 
-};
+    // 获取全部博客
+    axios.get(httpUrl+"/blog/12").then(response =>{
+        store.commit("hotBlogsListed",{
+            data:response.data
+        })
+        console.log(this.blog = store.state.blog);
+    }).catch(function (error){
+        console.log(error)
+    })
+})
+let blog=ref([])
 </script>
 
 <template>
@@ -19,14 +46,73 @@ const startRead=async ()=>{
                     <h2 class="intro">{{intro}}</h2>
                     <div class="bounce down" @click="startRead">
                         <el-icon :size="20" style="color: white;">
-                            <ArrowDown />
+                            <ArrowDown/>
                         </el-icon>
                     </div>
                 </el-card>
             </el-col>
         </el-row>
     </el-main>
+    <el-container class="layout">
+        <el-main id="index" class="animate__animated animate__fadeInUp" >
+            <el-row>
+                <el-col :sm="6">
+                    <div class="aside-content">
+                        <el-card class="card-widget" shadow="hover">
+                            <div class="card-title"><span>热门博客:</span></div>
+                            <div class="card-list">博客1</div>
+                            <div class="card-list">博客2</div>
+                        </el-card>
+                    </div>
+                </el-col>
 
+                <el-col :sm="18">
+                    <div class="recent-posts" id="recent-posts">
+                        <el-card shadow="hover">
+                            <div class="recent-post-item">
+                                <div class="post-cover">
+                                    <a href="" title="111">
+                                        <el-image class="blog-image"
+                                                  src="https://s2.loli.net/2022/04/26/JILkS5gp9cr24yv.jpg"></el-image>
+                                    </a>
+                                </div>
+                                <div class="recent-post-info" >
+                                    <div class="article-title-date">
+                                        <a class="article-title" title="111">111</a>
+                                        <span class="article-date" >createddate</span>
+                                    </div>
+                                    <div class="article-description">
+                                        qewrtyuiopiuytrewqertyutrwertyuyterweqwrtyuutrerqwertyreewewwrtyuytrewqertyqrewtrtyutytewre1234567896543213strdyrtytryrtyrtyrtyrtyrtyrtyrtyry45678976534234567
+                                    </div>
+                                </div>
+                            </div>
+
+                        </el-card>
+                        <el-card shadow="hover">
+                            <div class="recent-post-item">
+                                <div class="post-cover">
+                                    <a href="" title="222">
+                                        <el-image class="blog-image"
+                                                  src="https://challis-yin.github.io/img/404.jpg"></el-image>
+                                    </a>
+                                </div>
+                                <div class="recent-post-info">
+                                    <div class="article-title-date">
+                                        <a class="article-title">222</a>
+                                        <span class="article-date">111</span>
+                                    </div>
+                                    <div class="article-description">
+                                        12312312312312312313
+                                    </div>
+                                </div>
+                            </div>
+                        </el-card>
+                    </div>
+                </el-col>
+
+            </el-row>
+        </el-main>
+    </el-container>
 </template>
 
 <style scoped lang="less">
