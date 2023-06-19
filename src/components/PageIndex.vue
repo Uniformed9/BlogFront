@@ -27,7 +27,7 @@
           <el-row>
             <el-col :sm="6">
               <div class="aside-content">
-                <el-card class="card-widget">
+                <el-card class="card-widget" shadow="hover">
                 <div class="card-title"><span>热门博客:</span></div>
                   <div class="card-list">博客1</div>
                   <div class="card-list">博客2</div>
@@ -50,25 +50,30 @@
                     <a class="article-title" title="111">111</a>
                     <span class="article-date" >createddate</span>
                   </div>
-                  <div>
                     <div class="article-description">
                       qewrtyuiopiuytrewqertyutrwertyuyterweqwrtyuutrerqwertyreewewwrtyuytrewqertyqrewtrtyutytewre1234567896543213strdyrtytryrtyrtyrtyrtyrtyrtyrtyry45678976534234567
                     </div>
-                  </div>
                 </div>
                   </div>
 
               </el-card>
-              <el-card>
+              <el-card shadow="hover">
                 <div class="recent-post-item">
-                  <a href="" title="222">
-                    <el-image class="blog-image"
-                              src="https://challis-yin.github.io/img/404.jpg"></el-image>
-                  </a>
-                  <div class="recent-post-info">
-                    <a class="article-title">222</a>
-                    <span></span>
+                  <div class="post-cover">
+                    <a href="" title="222">
+                      <el-image class="blog-image"
+                                src="https://challis-yin.github.io/img/404.jpg"></el-image>
+                    </a>
                   </div>
+                    <div class="recent-post-info">
+                      <div class="article-title-date">
+                        <a class="article-title">222</a>
+                        <span class="article-date">111</span>
+                      </div>
+                      <div class="article-description">
+                        12312312312312312313
+                      </div>
+                    </div>
                 </div>
               </el-card>
             </div>
@@ -863,8 +868,8 @@ el-image {
   margin-top: 1rem;
   padding: 1rem 1.2rem;
   background: var(--card-bg);
-  -webkit-box-shadow: var(--card-box-shadow);
-  box-shadow: var(--card-box-shadow);
+  //-webkit-box-shadow: var(--card-box-shadow);
+  //box-shadow: var(--card-box-shadow);
   -webkit-transition: box-shadow 0.3s;
   -moz-transition: box-shadow 0.3s;
   -o-transition: box-shadow 0.3s;

@@ -1,6 +1,5 @@
 // http request 拦截器
 import axios from "axios";
-import {useStore} from "vuex";
 import store from "@/components/store";
 
 
