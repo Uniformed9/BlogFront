@@ -106,8 +106,8 @@ import {ElMessage} from "element-plus";
                 },
                 {
                     id: 2,
-                    authName: '随笔',
-                    path: 'essay'
+                    authName: '博客',
+                    path: 'blog'
                 },
                 {
                     id: 3,
