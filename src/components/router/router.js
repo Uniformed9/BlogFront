@@ -1,7 +1,9 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-import pageIndex from "@/components/PageIndex.vue";
 
-import TestPage from "@/components/TestPage.vue";
+import pageIndex from "@/components/PageIndex.vue";
+import UserPage from "@/components/componet/UserPage.vue";
+import BlogPage from "@/components/componet/BlogPage.vue";
+import IndexPage from "@/components/componet/IndexPage.vue";
 const routes = [
     {
         path: "/",
@@ -9,26 +11,14 @@ const routes = [
     },
     {
         path: "/pageIndex",
-        name:"pageIndex",
         component: pageIndex,
-        meta: {
-            index: 1
-        }
+        children: [
+            {path: '/index', component: IndexPage},
+            {path: '/about', component: UserPage},
+            {path: '/blog', component: BlogPage},
+        ]
     },
-    {
-        path: "/test",
-        name:"Test",
-        component: TestPage,
 
-    },
-    {
-        path: '/pageIndex2',
-        name: 'pageIndex2',
-        component: ()=>import('../PageIndex2.vue'),
-        meta:{
-            index:2
-        }
-    }
 
 ];
 

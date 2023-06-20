@@ -10,11 +10,11 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import '@/assets/css/animate.css'
 
 
-
 // import '@/assets/css/typo.css'
 // import '@/assets/css/prism.css'
 // import '@/assets/css/global.css'
 const app = createApp(App)
+
 
 app.config.globalProperties.$key="http://localhost:8070"
 
