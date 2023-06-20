@@ -18,9 +18,7 @@ export default createStore({
             nickName:'',
             token:'',
             avatar:''
-        }
-            token:''
-        }),
+        },
         blog:reactive({
             id:"",
             commentabled:"",
