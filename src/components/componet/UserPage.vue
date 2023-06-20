@@ -1,6 +1,8 @@
 <script setup>
-import {ref} from "vue";
-import avatar from "@/assets/pageIndex.jpg"
+import {computed, ref} from "vue";
+import {useStore} from "vuex";
+const store=useStore()
+const user=computed(()=>store.state.user)
 const showSectionId= ref('#info')
     const introduceList= [
     {
@@ -131,7 +133,7 @@ const  showSection=(name)=> {
     <div class="box">
         <aside class="animate__animated animate__bounceInLeft sidebar">
             <div class="avatar">
-                <img :src="avatar" title="Hikari">
+                <img :src="user.avatarLocal" title="Hikari">
             </div>
             <nav class="nav">
                 <a v-for="intro in introduceList" @click="showSection(intro.name)" :key="intro.id">{{intro.title}}</a>

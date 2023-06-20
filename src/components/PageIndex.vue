@@ -29,7 +29,7 @@ export default {
     background:url("../assets/pageIndex2.png");
     width:100%;
     height:100%;
-    position:fixed;
+    position:absolute;
     background-size:100% 100%;
 }
 

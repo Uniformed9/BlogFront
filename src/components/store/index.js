@@ -16,7 +16,8 @@ export default createStore({
             status:'',
             nickName:'',
             token:'',
-            avatar:''
+            avatar:'',
+            avatarLocal:''
         }
     },
     mutations: {
@@ -56,6 +57,12 @@ export default createStore({
             state.registorFormVisiable=false
             state.loginFormVisiable=false
 
+        },
+        setAvatar(state,avatar){
+          state.user.avatar=avatar
+        },
+        setAvatarLocal(state,avatar){
+            state.user.avatarLocal =avatar
         },
         showUser(state){
             state.haveUser = true

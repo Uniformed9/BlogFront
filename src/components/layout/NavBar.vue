@@ -60,10 +60,11 @@
             </div>
 <!--            显示头像-->
             <div v-else class="loginInfo">
-                <el-avatar :src="user.avatar"></el-avatar>
+                <el-avatar  :src="user.avatarLocal"></el-avatar>
                 <div class="user-option">
                     <h3 class="web-font nickname">{{user.nickName}}</h3>
-                    <p v-if="!logined" class="logout" @click="manageBlog">管理博客</p>
+                    <p class="logout" @click="createBlog">新建博客</p>
+                    <p v-if="!logined" class="logout" @click="manageBlog">个人资料</p>
                     <p class="logout" @click="logout">退出登录</p>
                 </div>
             </div>
@@ -135,8 +136,12 @@ import {ElMessage} from "element-plus";
         const user=computed(()=>{
             return store.state.user
         })
+
     const manageBlog=()=>{
             router.push("/about")
+    }
+    const createBlog=()=>{
+            
     }
     const logout=()=>{
 

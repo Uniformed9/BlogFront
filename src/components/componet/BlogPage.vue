@@ -734,7 +734,7 @@ el-image {
     overflow: hidden;
     margin-top: 1rem;
     padding: 1rem 1.2rem;
-    background: var(--card-bg);
+    //background: var(--card-bg);
     //-webkit-box-shadow: var(--card-box-shadow);
     //box-shadow: var(--card-box-shadow);
     -webkit-transition: box-shadow 0.3s;
