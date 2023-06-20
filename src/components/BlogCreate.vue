@@ -4,13 +4,25 @@
 
 
 
-  const title_value=ref();
-  const content_value=ref();
-  const category_value=ref();
-  const tag_value=ref();
+  const title_value=ref("");
+  const content_value=ref("");
+  const category_value=ref("");
+  const tag_value=ref("");
 
-  const submit=async ()=>{
-    await axios.post("",{})
+  const httpUrl="http://localhost:8070"
+
+  const currentTimePin=new Date().getTime();
+  const currentTime=new Date(currentTimePin)
+  const submit=async ()=> {
+    await axios.post(httpUrl+"/user/19/home/blogs", {
+      id:19,
+      content:content_value,
+      title:title_value
+    }).then(res => {
+      console.log(res)
+    }).catch(error=>{
+      console.log(error)
+    })
   }
 </script>
 
@@ -29,14 +41,14 @@
       <el-main>
         <el-row>
           <el-col>
-            <el-input placeholder="内容" v-model="content_value" class="content-class" type="textarea" :autosize="{minRows:30}" clearable/>
+            <el-input placeholder="内容" v-model="content_value" class="content-class" type="textarea" :autosize="{minRows:20}" clearable/>
           </el-col>
         </el-row>
       </el-main>
     </el-container>
     <el-container>
       <el-footer>
-        <el-row gutter="30">
+        <el-row :gutter="30">
           <el-col :span="12">
             <el-input placeholder="分类" v-model="category_value" class="category-class" type="text" clearable/>
           </el-col>
