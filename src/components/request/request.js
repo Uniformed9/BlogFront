@@ -1,5 +1,17 @@
 import axios from './http'
 
+
+
+export function getWithOutParam(url){
+    return new Promise((resolve,reject)=>{
+        axios.get(url).then(res=>{
+            resolve(res.data);
+        }).catch(err=>{
+            reject(err.data)
+        })
+    });
+}
+
 /**
  * get方法，对应get请求
  * @param {String} url [请求的url地址]

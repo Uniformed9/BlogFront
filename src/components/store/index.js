@@ -1,10 +1,11 @@
 import { createStore } from 'vuex'
- // import {reactive} from "vue";
+
 export default createStore({
     state: {
         userInfo: JSON.parse(window.sessionStorage.getItem('user')),
         token: JSON.parse(window.sessionStorage.getItem('token')),
         administrator:JSON.parse(window.sessionStorage.getItem('user'))!==null&&JSON.parse(window.sessionStorage.getItem('user')).type==='1',
+        blogInfo:JSON.parse(window.sessionStorage.getItem("blog")),
         loginFormVisiable:false,
         registorFormVisiable:false,
         haveUser:false,
@@ -16,8 +17,21 @@ export default createStore({
             status:'',
             nickName:'',
             token:'',
-            avatar:'',
-            avatarLocal:''
+            avatar:''
+        },
+        blog:{
+            id:"",
+            commentabled:"",
+            creatTime:"",
+            content:"",
+            description:"",
+            published:"",
+            title:"",
+            updateDate:"",
+            updateTime:"",
+            views:"",
+            userId:"",
+            userNickName:"",
         }
     },
     mutations: {
@@ -69,6 +83,9 @@ export default createStore({
         },
         cancelUser(state){
             state.haveUser=false
+        },
+        hotBlogsListed(state,data){
+            state.blog=data
         },
         showLFV(state){
             state.loginFormVisiable = true
