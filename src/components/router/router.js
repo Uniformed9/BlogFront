@@ -1,10 +1,10 @@
 import { createRouter, createWebHashHistory } from "vue-router";
+
 import pageIndex from "@/components/PageIndex.vue";
 import BlogCreate from "@/components/BlogCreate.vue";
 import BlogPage from "@/components/componet/BlogPage.vue";
-import UserPage from "@/components/componet/UserPage.vue";
 import IndexPage from "@/components/componet/IndexPage.vue";
-
+import UserPage from "@/components/componet/UserPage.vue";
 
 const routes = [
     {

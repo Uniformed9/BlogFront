@@ -1,5 +1,5 @@
 import { createStore } from 'vuex'
- // import {reactive} from "vue";
+
 export default createStore({
     state: {
         userInfo: JSON.parse(window.sessionStorage.getItem('user')),
@@ -17,8 +17,21 @@ export default createStore({
             status:'',
             nickName:'',
             token:'',
-            avatar:'',
-            avatarLocal:''
+            avatar:''
+        },
+        blog:{
+            id:"",
+            commentabled:"",
+            creatTime:"",
+            content:"",
+            description:"",
+            published:"",
+            title:"",
+            updateDate:"",
+            updateTime:"",
+            views:"",
+            userId:"",
+            userNickName:"",
         }
     },
     mutations: {
@@ -70,6 +83,9 @@ export default createStore({
         },
         cancelUser(state){
             state.haveUser=false
+        },
+        hotBlogsListed(state,data){
+            state.blog=data
         },
         showLFV(state){
             state.loginFormVisiable = true

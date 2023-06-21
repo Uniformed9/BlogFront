@@ -80,9 +80,7 @@ const download=async (row) => {
     }).then(res => {
         const blob = new Blob([res.data]);
         const url=URL.createObjectURL(blob)
-
         store.commit("setAvatarLocal",url)
-        console.log(store.state.user.avatarLocal)
     })
 }
 //用户登录
