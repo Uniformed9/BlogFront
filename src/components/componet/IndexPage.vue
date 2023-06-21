@@ -573,7 +573,7 @@ ul {
     -ms-transition: all 0.6s;
     transition: all 0.6s;
     object-fit: cover;
-    overflow-clip-margin: content-box;
+    overflow-clip-margin:content-box;
     overflow: clip;
     border-style: none;
 }

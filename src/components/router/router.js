@@ -1,9 +1,10 @@
-import { createRouter, createWebHashHistory } from "vue-router";
+import {createRouter, createWebHistory} from "vue-router";
 
 import pageIndex from "@/components/PageIndex.vue";
 import UserPage from "@/components/componet/UserPage.vue";
 import BlogPage from "@/components/componet/BlogPage.vue";
 import IndexPage from "@/components/componet/IndexPage.vue";
+import BlogDetail from "@/components/BlogDetail/BlogDetail";
 import BlogCreate from "@/components/componet/BlogCreate.vue";
 const routes = [
     {
@@ -21,19 +22,22 @@ const routes = [
         ]
     },
     {
+        path:"/blogs/:userId/:blogId",
+        name:"blogDetail",
+        component: BlogDetail,
+    },
+
+    {
         path: "/BlogCreate",
         name:"BlogCreate",
         component: BlogCreate
     },
-    {
-        path:"/blog/:userId/:blogId",
-        name:"blog",
-    }
 
 ];
 
+
 const router = createRouter({
-    history: createWebHashHistory(),
+    history: createWebHistory(),
     routes,
 });
 
