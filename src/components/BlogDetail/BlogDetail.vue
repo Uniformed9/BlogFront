@@ -8,7 +8,31 @@
     ><h2>{{blog.title}}</h2> </span
     ><el-divider />
     <span><div v-html="blog.content"></div></span>
-    <h4 class="authorName" :key="blog.userNickname" @click="goAuthorSpace">{{blog.userNickname}}</h4>
+    <h4 class="authorName" :key="blog.userNickname" @click="goAuthorSpace">author:{{blog.userNickname}}</h4>
+    <el-button text @click="getFavoriteList();dialogTableVisible = true">
+      收藏本文章
+    </el-button>
+
+    <el-dialog v-model="dialogTableVisible" title="收藏夹列表">
+      <el-table :data="favoriteData">
+
+        <el-table-column
+            :prop="index"
+            :label="item"
+            v-for="(item, index) in favoritesHeader"
+            :key="index"
+        >
+        </el-table-column>
+
+        <el-table-column fixed="right" label="操作" width="150">
+          <template v-slot="scope">
+          <el-button text @click="addFavoriteBlogto(scope.row.id)">添加</el-button>
+          </template>
+        </el-table-column>
+
+      </el-table>
+    </el-dialog>
+
   </div>
 
 
@@ -19,11 +43,12 @@
 import NavBar from "@/components/layout/NavBar";
 import ImageBackground from "@/components/componet/ImageBackground";
 import {ElMessage} from "element-plus";
-import {getCurrentInstance, onMounted} from "vue";
+import {getCurrentInstance, onMounted, reactive} from "vue";
 import {useRoute} from "vue-router/dist/vue-router";
 import {ref} from "vue";
 import axios from "@/components/request/http";
 import router from "@/components/router/router";
+import store from "@/components/store";
 const {proxy} =getCurrentInstance();
 const httpUrl = proxy.$key
 
@@ -31,18 +56,29 @@ const blog=ref({
         id:"",
         title:"default",
         content:"test content",
-        userNickname:"null"
+        userNickname:null
       })
+const favorites=ref([])
+const favoritesHeader=ref({
+  name:"收藏夹名称",
+  id:"收藏夹id"
+})
+
 const route=useRoute();
 // console.log(route.query,route.params,"====");
 let blogid=3
 let userid=1
+let myid=1
 onMounted(()=>{
   let blogID=route.params.blogId
   let userID=route.params.userId
+  // let myID=store.state.user.id
   blogid=blogID
   userid=userID
+  // myid=myID
   getBlogDetail();
+
+
 })
 
   const getBlogDetail=async ()=> {
@@ -63,9 +99,49 @@ onMounted(()=>{
   }
 const goAuthorSpace=()=>{
   router.push({path:'/index'})
-  //未配置个人空间路由，暂时跳转至主页
+  //路由尚未配置
 }
+const dialogTableVisible = ref(false)
+const getFavoriteList=async () => {
+  const {data, msg} = await axios.get(httpUrl+"/user/"+myid+"/home/favorites")
+  console.log("data", data)
+  console.log("msg", msg)
+  if(data.data!=null){
+    favorites.value=data.data
+  }
+  else{
+    ElMessage.error('不存在收藏夹')
+  }
+}
+const favoriteData = favorites;
+const addFavoriteBlogto=async id => {
+  const {data, msg} =await axios.get(httpUrl+"/user/"+myid+"/home/favorites/"+id)
+  console.log("data", data)
+  console.log("msg", msg)
+  console.log("favorites_id",id)
+  let isexist=false;
+  if(data.data!=null&&data!=null){
+    for(var i=0;i<data.data.length;i++) {
+      if (blogid == data.data[i].id) {
+        isexist = true;
+        break;
+      } else {
+        continue;
+      }
+    }
+  }
+  if(data==null){
+    ElMessage.error("没有这个收藏夹哦")
+  }
+  else if(isexist==true){
+    ElMessage.error("已经在里面了捏o(*￣︶￣*)o")
+  }
+  else{
+    await axios.post(httpUrl + "/user/" + myid + "/home/favorites/"+id+"/"+blogid)
+    ElMessage.success("添加成功惹~(*╹▽╹*)")
+  }
 
+}
 
 </script>
 
@@ -103,6 +179,19 @@ const goAuthorSpace=()=>{
     margin-top: 0;
     opacity: 1;
   }
+}
+
+ .el-button--text {
+   margin-right: 15px;
+ }
+.el-select {
+  width: 300px;
+}
+.el-input {
+  width: 300px;
+}
+.dialog-footer button:first-child {
+  margin-right: 10px;
 }
 
 </style>
