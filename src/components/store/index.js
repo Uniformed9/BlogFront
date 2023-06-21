@@ -1,5 +1,5 @@
 import { createStore } from 'vuex'
-import {reactive} from "vue";
+ // import {reactive} from "vue";
 export default createStore({
     state: {
         userInfo: JSON.parse(window.sessionStorage.getItem('user')),
@@ -17,22 +17,9 @@ export default createStore({
             status:'',
             nickName:'',
             token:'',
-            avatar:''
-        },
-        blog:reactive({
-            id:"",
-            commentabled:"",
-            creatTime:"",
-            content:"",
-            description:"",
-            published:"",
-            title:"",
-            updateDate:"",
-            updateTime:"",
-            views:"",
-            userId:"",
-            userNickName:"",
-        })
+            avatar:'',
+            avatarLocal:''
+        }
     },
     mutations: {
         // 改变页面
@@ -72,14 +59,17 @@ export default createStore({
             state.loginFormVisiable=false
 
         },
+        setAvatar(state,avatar){
+          state.user.avatar=avatar
+        },
+        setAvatarLocal(state,avatar){
+            state.user.avatarLocal =avatar
+        },
         showUser(state){
             state.haveUser = true
         },
         cancelUser(state){
             state.haveUser=false
-        },
-        hotBlogsListed(state,data){
-            state.blog=data
         },
         showLFV(state){
             state.loginFormVisiable = true

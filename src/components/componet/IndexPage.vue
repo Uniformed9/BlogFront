@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, nextTick, getCurrentInstance,ref} from "vue";
+import {onMounted, nextTick, getCurrentInstance, ref, watch} from "vue";
 import axios from "@/components/request/http"
 import {useStore} from "vuex";
 let intro="欢迎来到我的个人博客";
@@ -17,6 +17,7 @@ function startRead() {
 }
 onMounted(()=>{
     console.log("-------")
+
     blog.value=1
 
     // 获取全部博客
@@ -29,6 +30,18 @@ onMounted(()=>{
         console.log(error)
     })
 })
+
+watch(()=>store.state.blogChangeIndex,()=>{
+  nextTick(() => {
+    document.getElementById("index")
+        .scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        })
+  })
+  store.state.blogChangeIndex=0;
+})
+
 let blog=ref([])
 </script>
 

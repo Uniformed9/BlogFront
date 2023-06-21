@@ -9,11 +9,11 @@ import IndexPage from "@/components/componet/IndexPage.vue";
 const routes = [
     {
         path: "/",
-        redirect: "/pageIndex"
+
     },
-    {
-        path: "/pageIndex",
+    {   path:"/",
         component: pageIndex,
+        redirect: "/index",
         children: [
             {path: '/index', component: IndexPage},
             {path: '/about', component: UserPage},

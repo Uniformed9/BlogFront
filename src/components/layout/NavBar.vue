@@ -7,7 +7,7 @@
             <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" background-color="rgba(0,0,0,0)"
                      style="border: none;"
                      router text-color="#fff" active-text-color="#ffd04b">
-                <el-menu-item :index="'/'+item.path" v-for="item in menulist" background-color="rgba(0,0,0,0)" :key="item.id" @click="changePage(item.path)">
+                <el-menu-item :index="'/'+item.path" v-for="item in menulist" background-color="rgba(0,0,0,0)" :key="item.id" @click="changePage(item.path,item.id)">
                     <template v-slot:title>
                         <!--                图标-->
                         <el-icon><component :is="iconsObj[item.id]"/></el-icon>
@@ -20,7 +20,7 @@
             <div v-if="menuHiddenVisiable">
                 <el-menu :default-active="activeIndex" class="animate__animated animate__fadeInDown el-menu-hidden"
                          background-color="#545c64" router text-color="#fff" active-text-color="#ffd04b">
-                    <el-menu-item :index="'/'+item.path" v-for="item in menulist" :key="item.id" @click="changePage(item.path)">
+                    <el-menu-item :index="'/'+item.path" v-for="item in menulist" :key="item.id" @click="changePage(item.path,item.id)">
                         <template v-slot:title>
                             <!--                图标-->
                             <el-icon><component :is="iconsObj[item.id]"/></el-icon>
@@ -60,10 +60,11 @@
             </div>
 <!--            显示头像-->
             <div v-else class="loginInfo">
-                <el-avatar :src="user.avatar"></el-avatar>
+                <el-avatar  :src="user.avatarLocal"></el-avatar>
                 <div class="user-option">
                     <h3 class="web-font nickname">{{user.nickName}}</h3>
-                    <p v-if="!logined" class="logout" @click="manageBlog">管理博客</p>
+                    <p class="logout" @click="createBlog">新建博客</p>
+                    <p v-if="!logined" class="logout" @click="manageBlog">个人资料</p>
                     <p class="logout" @click="logout">退出登录</p>
                 </div>
             </div>
@@ -135,8 +136,12 @@ import {ElMessage} from "element-plus";
         const user=computed(()=>{
             return store.state.user
         })
+
     const manageBlog=()=>{
             router.push("/about")
+    }
+    const createBlog=()=>{
+            
     }
     const logout=()=>{
 
@@ -148,9 +153,14 @@ import {ElMessage} from "element-plus";
             router.push("/index")
     }
         //vue3新写法
-        const changePage=(name) =>{
+        const changePage=(name,id) =>{
             // console.log(name)
+          if (id===2){
+            router.push("/index");
+            store.state.blogChangeIndex=1;
+        }else {
             store.commit('changePage',name);
+          }
         }
         //this用不了
         const checkInput=()=> {
