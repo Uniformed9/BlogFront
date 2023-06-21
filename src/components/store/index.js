@@ -6,6 +6,7 @@ export default createStore({
         token: JSON.parse(window.sessionStorage.getItem('token')),
         administrator:JSON.parse(window.sessionStorage.getItem('user'))!==null&&JSON.parse(window.sessionStorage.getItem('user')).type==='1',
         blogInfo:JSON.parse(window.sessionStorage.getItem("blog")),
+        blogChange:false,
         loginFormVisiable:false,
         registorFormVisiable:false,
         haveUser:false,
@@ -35,6 +36,9 @@ export default createStore({
         }
     },
     mutations: {
+        setblogChange(state){
+            state.blogChange=!state.blogChange
+        },
         // 改变页面
         changePage(state,name){
             state.pageName = name

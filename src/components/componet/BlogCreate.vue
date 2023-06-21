@@ -9,8 +9,7 @@ const store=useStore()
 const param=reactive({
     title:'',
     content:'',
-    discription:'',
-
+    description:'',
 })
 
 // const form = reactive({
@@ -33,16 +32,18 @@ const value1 = ref([])//传的
 const back=()=>{
     router.push("/index")
 }
+
 const submit=async (param)=>{
     id.value=store.state.user.id
     const {data}=await axios.post(httpUrl+"/user/"+id.value+"/home/blogs",param)
-    console.log(data)
-    blogId.value=data
+
+    blogId.value=data.data
 
     //获取userid然后传到
-    // let mytag=Object.values(value1.value)
-    //
-    // await axios.post(httpUrl+"/user/"+id.value+"/home/blogs/"+blogId.value+"/tag",mytag)
+    let mytag=Object.values(value1.value)
+
+    await axios.post(httpUrl+"/user/"+id.value+"/home/blogs/"+blogId.value+"/tag",mytag)
+    await router.push("/index")
 }
 
 onMounted(()=>{

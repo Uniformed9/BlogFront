@@ -26,9 +26,9 @@ export default {
 </script>
 <style scoped lang="less">
 #building{
-    background:url("../assets/pageIndex2.png");
+    background:url("../assets/pageIndex2.png") no-repeat fixed center;
     width:100%;
-    height:100%;
+    height:auto;
     position:absolute;
     background-size:100% 100%;
 }

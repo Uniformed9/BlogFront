@@ -94,7 +94,6 @@ import {ElMessage} from "element-plus";
         const  scrollFlag=ref(false);
         const searchList=reactive([]);
         const store=useStore();
-        console.log(store.state.loginFormVisiable)
         const router =useRouter();
         let queryInfo=reactive({
             query: '',
@@ -155,7 +154,14 @@ import {ElMessage} from "element-plus";
         //vue3新写法
         const changePage=(name) =>{
             // console.log(name)
-            store.commit('changePage',name);
+            // if(name==="博客"){
+            //     router.push("/index")
+            //     console.log(store.state.blogChange)
+            // }
+            //else{
+                store.commit('changePage',name);
+            // }
+
         }
         //this用不了
         const checkInput=()=> {

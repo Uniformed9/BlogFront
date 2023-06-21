@@ -4,6 +4,7 @@ import pageIndex from "@/components/PageIndex.vue";
 import UserPage from "@/components/componet/UserPage.vue";
 import BlogPage from "@/components/componet/BlogPage.vue";
 import IndexPage from "@/components/componet/IndexPage.vue";
+import BlogCreate from "@/components/componet/BlogCreate.vue";
 const routes = [
     {
         path: "/",
@@ -23,6 +24,10 @@ const routes = [
         path: "/BlogCreate",
         name:"BlogCreate",
         component: BlogCreate
+    },
+    {
+        path:"/blog/:userId/:blogId",
+        name:"blog",
     }
 
 ];

@@ -601,11 +601,7 @@ el-image {
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
-    //-webkit-box-orient: horizontal;
-    //-moz-box-orient: horizontal;
-    //-webkit-flex-direction: row;
-    //-ms-flex-direction: row;
-    //flex-direction: row;
+
     -webkit-box-align: center;
     -moz-box-align: center;
     -ms-flex-align: center;
