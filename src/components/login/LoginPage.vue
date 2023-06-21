@@ -103,7 +103,6 @@ const userLogin=async(loginFormRef)=>{
                     console.log(data)
                     store.commit("constructUser",data)
                     //调用
-                    console.log(store.state.user.userName)
                     ElMessage({
                         message: '登陆成功',
                         type: 'success',

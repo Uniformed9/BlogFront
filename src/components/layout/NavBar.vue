@@ -4,7 +4,7 @@
         <div class="animate__animated animate__fadeIn title" :key="key" :style="{'background-image': bgUrl}"></div>
         <el-header :style="'margin-bottom:'+ headerBottom +'px'" class="animate__animated animate__fadeIn">
             <h2 class="animate__animated animate__swing logo" :key="shade" @click="shade++">Uni</h2>
-            <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" 0
+            <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal"
                      style="border: none;"
                      router text-color="#fff" active-text-color="#ffd04b">
                 <el-menu-item :index="'/'+item.path" v-for="item in menulist" background-color="rgba(0,0,0,0)" :key="item.id" @click="changePage(item.path)">

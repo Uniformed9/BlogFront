@@ -1,5 +1,5 @@
 <script setup>
-import {getCurrentInstance, onMounted, reactive,ref} from "vue";
+import { getCurrentInstance, onMounted, reactive, ref} from "vue";
 import axios from "@/components/request/http";
 import {useStore} from "vuex";
 import {useRouter} from "vue-router";
@@ -7,45 +7,50 @@ const router=useRouter()
 const store=useStore()
 // 传入标题,描述,内容,标签
 const param=reactive({
-    title_value:'',
-    content_value:'',
-    tag_value:'',
-    discription_value:'',
+    title:'',
+    content:'',
+    discription:'',
 
 })
-const form = reactive({
-    name: '',
-    region: '',
-    date1: '',
-    date2: '',
-    delivery: false,
-    type: [],
-    resource: '',
-    desc: '',
-})
-const id=store.state.user.id
+
+// const form = reactive({
+//     name: '',
+//     region: '',
+//     date1: '',
+//     date2: '',
+//     delivery: false,
+//     type: [],
+//     resource: '',
+//     desc: '',
+// })
+const id=ref(0)
 const {proxy}=getCurrentInstance()
 const httpUrl=proxy.$key
-
-const tags = ref([])
-
+const blogId=ref(0)
+//获取tags列表
+const tags=ref([])
 const value1 = ref([])//传的
 const back=()=>{
     router.push("/index")
 }
 const submit=async (param)=>{
-    console.log()
-    const {data,message}=await axios.post(httpUrl+"/blog"+id+"/uuu",param)
+    id.value=store.state.user.id
+    const {data}=await axios.post(httpUrl+"/user/"+id.value+"/home/blogs",param)
+    console.log(data)
+    blogId.value=data
 
+    //获取userid然后传到
+    // let mytag=Object.values(value1.value)
+    //
+    // await axios.post(httpUrl+"/user/"+id.value+"/home/blogs/"+blogId.value+"/tag",mytag)
 }
+
 onMounted(()=>{
         axios({
             url: httpUrl+"/tag/getAll",
             method: 'get',
         }).then(res => {
-            console.log(res)
             tags.value=res.data.data
-            console.log(tags.value)
         })
 })
 
@@ -58,7 +63,7 @@ onMounted(()=>{
             <el-header>
                 <el-row>
                     <el-col>
-                        <el-input placeholder="标题" v-model="param.title_value" class="title-class" type="text" size="large" clearable/>
+                        <el-input placeholder="标题" v-model="param.title" class="title-class" type="text" size="large" clearable/>
                     </el-col>
                 </el-row>
             </el-header>
@@ -68,7 +73,7 @@ onMounted(()=>{
             <el-header>
                 <el-row>
                     <el-col>
-                        <el-input placeholder="描述" v-model="param.discription_value" class="title-class" type="text" size="large" clearable/>
+                        <el-input placeholder="描述" v-model="param.discription" class="title-class" type="text" size="large" clearable/>
                     </el-col>
                 </el-row>
             </el-header>
@@ -77,7 +82,7 @@ onMounted(()=>{
             <el-main>
                 <el-row>
                     <el-col style="height: 250px">
-                        <el-input placeholder="内容" v-model="param.content_value" class="content-class" type="textarea" :autosize="{minRows:11}" clearable/>
+                        <el-input placeholder="内容" v-model="param.content" class="content-class" type="textarea" :autosize="{minRows:11}" clearable/>
                     </el-col>
                 </el-row>
             </el-main>
@@ -93,9 +98,9 @@ onMounted(()=>{
                 >
                     <el-option
                         v-for="item in tags"
-                        :key="item.id"
+                        :key="item.name"
                         :label="item.name"
-                        :value="item.id"
+                        :value="item.name"
                     />
                 </el-select>
                 <el-row justify="end">
@@ -122,14 +127,6 @@ onMounted(()=>{
 }
 
 .content-class{
-
-}
-
-.category-class{
-
-}
-
-.tag-class{
 
 }
 
