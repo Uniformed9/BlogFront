@@ -1,45 +1,49 @@
 <script setup>
-import {onMounted, nextTick, getCurrentInstance, ref, watch} from "vue";
+import {onMounted, nextTick, getCurrentInstance, ref, watch, provide, computed} from "vue";
 import axios from "@/components/request/http"
 import {useStore} from "vuex";
+import router from "@/components/router/router";
+import {onBeforeRouteUpdate, useRoute, useRouter} from "vue-router";
 let intro="欢迎来到我的个人博客";
 const store=useStore()
 const {proxy}=getCurrentInstance()
 const httpUrl=proxy.$key
-function startRead() {
-    nextTick(() => {
+const route=useRoute()
+const startRead=()=> {
         document.getElementById("index")
             .scrollIntoView({
                 behavior: 'smooth',
                 block: 'start'
             })
-    })
 }
+
 onMounted(()=>{
     console.log("-------")
 
     blog.value=1
 
     // 获取全部博客
-    axios.get(httpUrl+"/blog/12").then(response =>{
-        store.commit("hotBlogsListed",{
-            data:response.data
-        })
-        console.log(this.blog = store.state.blog);
-    }).catch(function (error){
-        console.log(error)
-    })
+    // axios.get(httpUrl+"/blog/12").then(response =>{
+    //     store.commit("hotBlogsListed",{
+    //         data:response.data
+    //     })
+    //     console.log(this.blog = store.state.blog);
+    // }).catch(function (error){
+    //     console.log(error)
+    // })
 })
 
-watch(()=>store.state.blogChangeIndex,()=>{
-  nextTick(() => {
-    document.getElementById("index")
-        .scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        })
-  })
+computed(()=>{
+
+})
+watch(()=>(store.state.blogChangeIndex===1),()=>{
+  document.getElementById("index")
+      .scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      })
   store.state.blogChangeIndex=0;
+  console.log("111")
 })
 
 let blog=ref([])
@@ -505,6 +509,276 @@ ul {
   .el-pagination {
     width: 100%;
   }
+}
+
+
+
+@media screen and (max-width: 768px){
+  .recent-post-item .post_cover {
+    -webkit-box-ordinal-group: 1 !important;
+    -moz-box-ordinal-group: 1 !important;
+    -ms-flex-order: 1 !important;
+    order: 1 !important;
+    width: 100%;
+    border-radius: 8px 8px 0 0;
+  }
+}
+
+
+.recent-post-item .post-cover{
+  overflow: hidden;
+  width: 50%;
+}
+
+
+.blog-image {
+  width: 100%;
+  height: 100%;
+  -webkit-transition: all 0.6s;
+  -moz-transition: all 0.6s;
+  -o-transition: all 0.6s;
+  -ms-transition: all 0.6s;
+  transition: all 0.6s;
+  object-fit: cover;
+  overflow-clip-margin: content-box;
+  overflow: clip;
+  border-style: none;
+}
+.blog-image:hover{
+  transform: scale(1.1);
+  transition: all 0.3s;
+}
+
+el-image {
+  max-width: 100%;
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  -o-transition: all 0.2s;
+  -ms-transition: all 0.2s;
+  transition: all 0.2s;
+}
+
+
+@media screen and (max-width: 768px){
+  .layout {
+    padding: 1rem 5px;
+  }
+}
+@media screen and (max-width: 900px){
+  .layout {
+    -webkit-box-orient: vertical;
+    -moz-box-orient: vertical;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+  }
+}
+
+.layout {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  margin: auto;
+  padding: 2rem 15px;
+  max-width: 1200px;
+}
+
+@media screen and (min-width: 900px){
+  .recent-posts {
+    -webkit-box-ordinal-group: 2;
+    -moz-box-ordinal-group: 2;
+    -ms-flex-order: 2;
+    order: 2;
+  }
+}
+
+@media screen and (max-width: 900px){
+  .recent-posts{
+
+  }
+}
+
+.recent-posts {
+
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  -ms-transition: all 0.3s;
+  transition: all 0.3s;
+
+}
+
+.el-card{
+  margin-bottom: 20px;
+}
+
+@media screen and (max-width: 768px){
+  .recent-post-item {
+    -webkit-box-orient: vertical;
+    -moz-box-orient: vertical;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    height: auto !important;
+    //position: relative;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .recent-post-item {
+    border-radius: 12px 12px 8px 8px;
+  }
+}
+
+.recent-post-item {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  //-webkit-box-orient: horizontal;
+  //-moz-box-orient: horizontal;
+  //-webkit-flex-direction: row;
+  //-ms-flex-direction: row;
+  //flex-direction: row;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  height: 16em;
+  //border-radius: 12px 8px 8px 12px;
+  //background: var(--card-bg);
+  //-webkit-box-shadow: var(--card-box-shadow);
+  //box-shadow: var(--card-box-shadow);
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  -ms-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+
+
+
+@media screen and (max-width: 768px){
+  .recent-post-item .recent-post-info {
+    -webkit-box-ordinal-group: 2 !important;
+    -moz-box-ordinal-group: 2 !important;
+    -ms-flex-order: 2 !important;
+    order: 2 !important;
+    padding: 1rem 1rem 1.5rem 1rem;
+    width: 100%;
+    //position: absolute;
+    //bottom: 0;
+    background-color:#ffffff;
+  }
+}
+@media screen and (min-width: 768px){
+  .recent-post-item >.recent-post-info {
+    overflow: hidden;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    background-color:#ffffff;
+    //position: relative;
+  }
+}
+
+.recent-post-item> .recent-post-info{
+  display: inline-block;
+  overflow: hidden;
+  padding: 0 40px;
+  width: 50%;
+}
+
+.article-title-date{
+  padding: 10px 10px 10px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.article-title {
+  margin-bottom: 0.3rem;
+  color: var(--text-highlight-color);
+  font-size: 1.72em;
+  line-height: 1.4;
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  -ms-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+  -webkit-line-clamp: 2;
+}
+
+.article-date{
+  margin-bottom: 0.3rem;
+  color: var(--text-highlight-color);
+  font-size: 1.3em;
+  line-height: 1.4;
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  -ms-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+  -webkit-line-clamp: 2;
+}
+
+@media screen and (max-width: 768px){
+  .article-description{
+    display: flex;
+    height: auto;
+  }
+}
+
+.article-description{
+  padding: 10px 10px 0 10px;
+  margin-top: 0.3rem;
+  -webkit-line-clamp: 2;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  align-items: center;
+  font-size: 18px;
+  word-break: break-word;
+  text-align: start;
+}
+
+@media screen and (min-width: 900px) {
+  .aside-content{
+    padding-right: 15px;
+  }
+}
+
+.card-title{
+  font-size: 1.5em;
+  font-weight: 500;
+  display: flex;
+}
+
+.card-list{
+  display: flex;
+  padding-left: 15px;
+  font-size: 1rem;
+  margin: 10px 0 10px 0;
+}
+
+.card-widget {
+  //position: relative;
+  overflow: hidden;
+  margin-top: 1rem;
+  padding: 1rem 1.2rem;
+  //background: var(--card-bg);
+  //-webkit-box-shadow: var(--card-box-shadow);
+  //box-shadow: var(--card-box-shadow);
+  -webkit-transition: box-shadow 0.3s;
+  -moz-transition: box-shadow 0.3s;
+  -o-transition: box-shadow 0.3s;
+  -ms-transition: box-shadow 0.3s;
+  transition: box-shadow 0.3s;
 }
 
 </style>

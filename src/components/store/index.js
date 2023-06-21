@@ -6,6 +6,7 @@ export default createStore({
         token: JSON.parse(window.sessionStorage.getItem('token')),
         administrator:JSON.parse(window.sessionStorage.getItem('user'))!==null&&JSON.parse(window.sessionStorage.getItem('user')).type==='1',
         blogInfo:JSON.parse(window.sessionStorage.getItem("blog")),
+        blogChangeIndex:0,
         loginFormVisiable:false,
         registorFormVisiable:false,
         haveUser:false,

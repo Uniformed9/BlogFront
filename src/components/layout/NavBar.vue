@@ -4,7 +4,7 @@
         <div class="animate__animated animate__fadeIn title" :key="key" :style="{'background-image': bgUrl}"></div>
         <el-header :style="'margin-bottom:'+ headerBottom +'px'" class="animate__animated animate__fadeIn">
             <h2 class="animate__animated animate__swing logo" :key="shade" @click="shade++">Uni</h2>
-            <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" 0
+            <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal"
                      style="border: none;"
                      router text-color="#fff" active-text-color="#ffd04b">
                 <el-menu-item :index="'/'+item.path" v-for="item in menulist" background-color="rgba(0,0,0,0)" :key="item.id" @click="changePage(item.path,item.id)">
@@ -76,7 +76,7 @@
 </template>
 
 <script setup>
-import {ref, reactive, onMounted, computed} from "vue";
+import {ref, reactive, onMounted, computed, watch, nextTick, inject} from "vue";
 import {Menu} from "@element-plus/icons-vue";
 import {useStore,mapState} from "vuex";
 import {useRouter} from "vue-router";
@@ -162,6 +162,17 @@ import {ElMessage} from "element-plus";
             store.commit('changePage',name);
           }
         }
+// watch(()=>(store.state.blogChangeIndex===1),()=>{
+//   nextTick(() => {
+//     document.getElementById("index")
+//         .scrollIntoView({
+//           behavior: 'smooth',
+//           block: 'start'
+//         })
+//   })
+//   store.state.blogChangeIndex=0;
+//   console.log("111")
+// })
         //this用不了
         const checkInput=()=> {
             searching.value = queryInfo.query !== '';
@@ -216,6 +227,7 @@ import {ElMessage} from "element-plus";
         const logined=computed(()=>{
             return user.value.id === ''
         })
+
         //针对滚轮的函数
         onMounted(()=>{window.addEventListener('scroll', handleScroll);})
 </script>

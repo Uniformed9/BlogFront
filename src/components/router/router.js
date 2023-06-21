@@ -1,10 +1,11 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 
 import pageIndex from "@/components/PageIndex.vue";
-import BlogCreate from "@/components/BlogCreate.vue";
+import BlogCreate from "@/components/BlogCreate1.vue";
 import BlogPage from "@/components/componet/BlogPage.vue";
 import IndexPage from "@/components/componet/IndexPage.vue";
 import UserPage from "@/components/componet/UserPage.vue";
+import FavoritePage from "@/components/componet/FavoritePage.vue";
 
 const routes = [
     {
@@ -24,6 +25,11 @@ const routes = [
         path: "/BlogCreate",
         name:"BlogCreate",
         component: BlogCreate
+    },
+    {
+        path: "/FavoritePage",
+        name: "FavoritePage",
+        component: FavoritePage
     }
 
 ];

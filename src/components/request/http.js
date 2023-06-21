@@ -14,24 +14,24 @@ axios.interceptors.request.use(
     },
 )
 //后置拦截
-axios.interceptors.response.use(
-    response=>{
-    let res=response.data;
-    console.log(res)
-    console.log(111)
-        if (res.code===200){
-            return response
-        }else {
-            Element.Message.error("error",{duration:3*1000})
-
-            return Promise.reject(response.data.msg)
-        }
-},
-    error => {
-        console.log(error)
-
-        if (error.response.status===401){
-            store.commit("REMOVE_INFO")
-        }
-    })
+// axios.interceptors.response.use(
+//     response=>{
+//     let res=response.data;
+//     console.log(res)
+//     console.log(111)
+//         if (res.code===200){
+//             return response
+//         }else {
+//             Element.Message.error("error",{duration:3*1000})
+//
+//             return Promise.reject(response.data.msg)
+//         }
+// },
+//     error => {
+//         console.log(error)
+//
+//         if (error.response.status===401){
+//             store.commit("REMOVE_INFO")
+//         }
+//     })
 export default axios
