@@ -1,17 +1,16 @@
 import { createRouter, createWebHashHistory } from "vue-router";
+
 import pageIndex from "@/components/PageIndex.vue";
-import BlogCreate from "@/components/componet/BlogCreate.vue";
-import BlogPage from "@/components/componet/BlogPage.vue";
 import UserPage from "@/components/componet/UserPage.vue";
+import BlogPage from "@/components/componet/BlogPage.vue";
 import IndexPage from "@/components/componet/IndexPage.vue";
-
-
 const routes = [
     {
         path: "/",
-
+        redirect: "/pageIndex"
     },
-    {   path:"/",
+    {
+        path: "/pageIndex",
         component: pageIndex,
         redirect: "/index",
         children: [

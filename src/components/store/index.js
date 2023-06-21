@@ -1,5 +1,5 @@
 import { createStore } from 'vuex'
-
+ // import {reactive} from "vue";
 export default createStore({
     state: {
         userInfo: JSON.parse(window.sessionStorage.getItem('user')),
