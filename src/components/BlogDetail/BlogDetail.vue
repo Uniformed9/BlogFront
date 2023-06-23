@@ -6,7 +6,7 @@
   <div class="theBlogContent">
     <el-card>
       <div class="title">
-        <h2><span>{{blog.title}}</span> </h2>
+        <h2><span>{{blog.title}} </span> </h2>
       </div>
       <div class="card-info">
         <div class="user-info">
