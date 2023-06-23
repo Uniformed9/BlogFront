@@ -4,16 +4,48 @@
   </div>
   <ImageBackground class="wife-cover">
   <div class="theBlogContent">
-    <span
-    ><h2>{{blog.title}}</h2> </span
-    ><el-divider />
-    <span><div v-html="blog.content"></div></span>
-    <h4 class="authorName" :key="blog.userNickname" style="cursor: pointer" @click="goAuthorSpace(userid)">author:{{blog.userNickname}}</h4>
-    <el-button text @click="getFavoriteList();dialogTableVisible = true">
-      收藏本文章
-    </el-button>
+    <el-card>
+      <div class="title">
+        <h2><span>{{blog.title}} </span> </h2>
+      </div>
+      <div class="card-info">
+        <div style="display: flex;align-items: center;">
+        <div class="user-info">
+          <el-text type="info" class="not-author-name">作者:</el-text>
+          <el-text type="info" class="authorName" :key="blog.userNickname" @click="goAuthorSpace(userid)">{{blog.userNickname}} </el-text>
+        </div>
+          <div class="follow-button">
+            <el-button type="primary" icon="Check" circle @click=""/>
+          </div>
+        <div class="views-info">
+          <el-text type="info" class="not-views-name">&emsp;浏览量:</el-text>
+          <el-text class="views-name">{{blog.views}}</el-text>
+        </div>
+        </div>
+        <div v-show="tagsOfBlog.list!=null" class="tag-info">
+          <span class="not-tag-name">标签:&emsp;</span>
+          <span v-for="tag in tagsOfBlog.list" :key="tag">
+              <span v-if="tag.id==0">无标签</span>
+              <span v-else><el-tag>{{ tag.name }}</el-tag></span>
+            </span>
+        </div>
+      </div>
+      <div class="content">
+      <div><span v-html="blog.content"></span></div>
+    </div>
+      <div class="love-button">
+        <el-button class="button" text @click="getFavoriteList();dialogTableVisible = true" icon="star" circle>
+
+        </el-button>
+      </div>
+    </el-card>
+
+
 
     <el-dialog v-model="dialogTableVisible" title="收藏夹列表">
+      <el-button :type="'primary'" text size="large" @click="createFavoritesDialog.visible = true">
+        新建收藏夹
+      </el-button>
       <el-table :data="favoriteData">
 
         <el-table-column
@@ -26,11 +58,28 @@
 
         <el-table-column fixed="right" label="操作" width="150">
           <template v-slot="scope">
-          <el-button text @click="addFavoriteBlogto(scope.row.id)">添加</el-button>
+          <el-button text @click="addFavoriteBlogto(scope.row.id);getFavoriteList()">收藏</el-button>
           </template>
         </el-table-column>
 
       </el-table>
+    </el-dialog>
+
+    <el-dialog
+        v-model="createFavoritesDialog.visible"
+        title="新建收藏夹"
+        width="30%"
+        :before-close="handleClose">
+              <span>
+                <el-text class="mx-1" style="padding-right: 300px">标题</el-text>
+                <el-input v-model="newFavoritesName.name" placeholder="请输入标题"/>
+              </span>
+      <template #footer>
+                <span class="dialog-footer">
+<!--                  <el-button @click="createFavoritesDialog.visible = false">算了</el-button>-->
+                  <el-button type="primary" @click="createNewFavorites(newFavoritesName.name)">添加</el-button>
+                </span>
+      </template>
     </el-dialog>
 
   </div>
@@ -52,11 +101,53 @@ import store from "@/components/store";
 const {proxy} =getCurrentInstance();
 const httpUrl = proxy.$key
 
+const tagsOfBlog = reactive({
+  list:[]
+})
+
+const getTagsByBlogId = async function (blogId) {
+  console.log("in")
+  try {
+    const {data} = await axios.get(httpUrl + "/blog/" + blogId + "/tags")
+    console.log(data)
+    return data.data
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+const createFavoritesDialog=reactive({
+  visible:false
+})
+
+const newFavoritesName = reactive({
+  name: ""
+})
+
+const createNewFavorites = async (name) => {
+  console.log(name)
+  if (name === "") {
+    ElMessage({
+      message: "标题不能为空😡😡",
+      type: 'error',
+    })
+    return
+  }
+  await axios.post(httpUrl + "/user/" + myid + "" + "/home/favorites/" + name)
+  // await getFavorites()
+  // await getBlogByFavorites()
+  createFavoritesDialog.visible = false
+  getFavoriteList()
+}
+
+
 const blog=ref({
         id:"",
         title:"default",
         content:"test content",
-        userNickname:null
+        userNickname:null,
+        views:null
+
       })
 const favorites=ref([])
 const favoritesHeader=ref({
@@ -68,15 +159,17 @@ const route=useRoute();
 // console.log(route.query,route.params,"====");
 let blogid=3
 let userid=1
-let myid=3
+let myid=1
 onMounted(()=>{
   let blogID=route.params.blogId
   let userID=route.params.userId
-  let myID=store.state.user.id
+  // let myID=store.state.user.id
   blogid=blogID
   userid=userID
-  myid=myID
+  // myid=myID
   getBlogDetail();
+  addviewcounts();
+
 })
 
   const getBlogDetail=async ()=> {
@@ -90,18 +183,23 @@ onMounted(()=>{
       blog.value.id = data.data.id
       blog.value.content = data.data.content
       blog.value.title = data.data.title
+      blog.value.views = data.data.views
       blog.value.userNickname=data.data.userNickname
+      tagsOfBlog.list = await getTagsByBlogId(data.data.id)
+      console.log(tagsOfBlog.list)
     } else {
       ElMessage.error('显示失败')
     }
   }
-const goAuthorSpace=(userid)=>{
-  router.push({path:'/user/'+userid})
+  const addviewcounts=async () => {
+    await axios.post(httpUrl+"/blog/view/"+blogid)
+  }
+const goAuthorSpace=()=>{
+  router.push({path:'/index'})
   //路由尚未配置
 }
 const dialogTableVisible = ref(false)
 const getFavoriteList=async () => {
-    console.log(myid)
   const {data, msg} = await axios.get(httpUrl+"/user/"+myid+"/home/favorites")
   console.log("data", data)
   console.log("msg", msg)
@@ -138,7 +236,6 @@ const addFavoriteBlogto=async id => {
   else{
     await axios.post(httpUrl + "/user/" + myid + "/home/favorites/"+id+"/"+blogid)
     ElMessage.success("添加成功惹~(*╹▽╹*)")
-
   }
 
 }
@@ -148,16 +245,113 @@ const addFavoriteBlogto=async id => {
 <style scoped>
 
 .wife-cover {
-  display:flex;
   align-items:flex-start;
   justify-content: center;
-
+  background:url("https://img1.imgtp.com/2023/06/21/MUzggJOL.png") no-repeat center fixed;
+  width: -webkit-fill-available;
+  height: 768px;
+  display: flex;
+  -webkit-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 .theBlogContent {
   text-align: center;
   position: absolute;
-  width: 100%;
-  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+  width: 80%;
+  //text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+  background-color: #fff;
+  margin-top: 30px;
+  border-radius: 5px;
+}
+
+.title{
+  font-size: 28px;
+  color: #222226;
+  font-weight: 600;
+  display: flex;
+}
+
+.card-info{
+  background-color: #f8f8f8;
+  border-radius: 10px;
+  padding: 10px 20px;
+  color: #999aaa;
+}
+
+.user-info{
+  display: flex;
+}
+
+.not-author-name{
+  font-size: 14px;
+
+}
+.views-info{
+  display: flex;
+}
+
+.not-views-name{
+  font-size: 14px;
+
+}
+
+.authorName{
+  color: #555556;
+  font-size: 18px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.views-name{
+  font-size: 15px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.tag-info{
+  margin-top: 10px;
+  display: flex;
+}
+
+.not-tag-name{
+  font-size: 14px;
+  align-items: center;
+  display: flex;
+}
+
+.tag-name{
+  background-color: #fff;
+  color: #5094d5;
+  border: 1px solid #eaeaef;
+  padding: 3px 6px;
+  font-size: 14px;
+  margin-left: 10px;
+  align-items: center;
+  display: flex;
+}
+
+.content{
+  display: flex;
+  margin-top: 30px;
+  color: #4d4d4d;
+}
+
+.love-button{
+  display: flex;
+  margin-top: 30px;
+  justify-content: end;
+  align-items: center;
+}
+
+.button{
+  background-color: #e5e9ef;
+}
+
+.button:hover{
+  background-color: #b3b2b8;
+  color:#3a8ee6;
+  border: 1px solid #eeeee6;
 }
 
 @media screen and (max-width: 900px) {
@@ -179,19 +373,6 @@ const addFavoriteBlogto=async id => {
     margin-top: 0;
     opacity: 1;
   }
-}
-
- .el-button--text {
-   margin-right: 15px;
- }
-.el-select {
-  width: 300px;
-}
-.el-input {
-  width: 300px;
-}
-.dialog-footer button:first-child {
-  margin-right: 10px;
 }
 
 </style>

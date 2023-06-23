@@ -5,7 +5,7 @@
       <!--        <source src="@/assets/hutao.mp4" type="video/mp4">-->
       <!--      </video>-->
     </div>
-
+    <NavBar></NavBar>
     <div class="inputBox">
       <el-input v-model="inputContent"
                 class="searchinput"
@@ -17,47 +17,43 @@
       <el-button :icon="Search" circle @click="searchBlogList()"/>
     </div>
     <div class="searchResult" style="margin-top: 20px;">
-
-          <el-table
-              stripe
-              :data="bloglist.list"
-              :key="tableKey.key"
-              class=" animate__animated animate__fadeIn"
-              style="background-color: white"
-              >
-            <el-table-column prop="title" label="标题" width="180" >
-              <template #default="scope">
-                <el-link class="cursor" @click="changeToBlog(scope.row.userId,scope.row.id)">
-                  {{ scope.row.title }}
-                </el-link>
-              </template>
-            </el-table-column>
-            <el-table-column prop="userNickname" label="作者" width="180">
-              <template #default="scope">
-                <el-link class="cursor" @click="changeToUser(scope.row.userId)">
-                  {{ scope.row.userNickname }}
-                </el-link>
-              </template>
-
-            </el-table-column>
-            <el-table-column prop="description" label="简介" width="300"/>
-            <el-table-column label="标签" width="200">
-              <template #default="scope">
+      <el-table
+          stripe
+          :data="bloglist.list"
+          :key="tableKey.key"
+          class="el-table animate__animated animate__fadeIn"
+          style="width: 80%">
+        <el-table-column prop="title" label="标题" width="180">
+          <template #default="scope">
+            <el-link :to="'/blog/'+scope.row.id">
+              {{ scope.row.title }}
+            </el-link>
+          </template>
+        </el-table-column>
+        <el-table-column prop="userNickname" label="作者" width="180">
+          <template #default="scope">
+            <el-link :to="'/home/'+scope.row.userId">
+              {{ scope.row.userNickname }}
+            </el-link>
+          </template>
+        </el-table-column>
+        <el-table-column prop="description" label="简介" width="300"/>
+        <el-table-column label="标签" width="200">
+          <template #default="scope">
             <span v-for="tag in tagsOfBlogs.map[scope.row.id]" :key="tag">
               <span v-if="tag.id==0"></span>
               <span v-else><el-tag>{{ tag.name }}</el-tag></span>
             </span>
-              </template>
-            </el-table-column>
-            <el-table-column prop="createDate" label="创建日期" sortable/>
-          </el-table>
-
-
-
-
-    </div>
-    <div>
-
+          </template>
+        </el-table-column>
+        <el-table-column label="" width="50">
+          <template #default="scope">
+            <!--            <h1>{{viewOfBlogs.map}}</h1>-->
+            <img :src="hot" v-if="viewOfBlogs.map[scope.row.id]>0"/>
+          </template>
+        </el-table-column>
+        <el-table-column prop="createDate" label="创建日期" sortable/>
+      </el-table>
     </div>
   </div>
 </template>
@@ -70,6 +66,8 @@ import {ElMessage} from "element-plus";
 import axios from "@/components/request/http";
 import {get} from "@/components/request/request";
 import router from "@/components/router/router";
+import {get} from "@/components/request/request";
+import hot from "@/assets/hot.jpg"
 
 
 const {proxy} = getCurrentInstance()
@@ -112,6 +110,9 @@ const getBlog = async () => {
 const tagsOfBlogs = reactive({
   map: {}
 })
+const viewOfBlogs = reactive({
+  map: {}
+})
 
 const getTagsByBlogId = async function (blogId) {
   try {
@@ -124,7 +125,7 @@ const getTagsByBlogId = async function (blogId) {
 
 const searchBlogList = async () => {
   try {
-    const {data, msg} = await axios.get(httpUrl + "/blog/search/" + inputContent.value)
+    const {data, msg} = await axios.get(httpUrl + "/blog/search/" + inputContent.value.trim())
     console.log("in function:" + inputContent.value)
     if (data == null) {
       ElMessage({
