@@ -22,11 +22,7 @@
       <div><span v-html="blog.content"></span></div>
     </div>
     </el-card>
-    <span
-    ><h2>{{blog.title}}</h2> </span
-    ><el-divider />
-    <span><div v-html="blog.content"></div></span>
-    <h4 class="authorName" :key="blog.userNickname" @click="goAuthorSpace">author:{{blog.userNickname}}</h4>
+
     <el-button text @click="getFavoriteList();dialogTableVisible = true">
       收藏本文章
     </el-button>
