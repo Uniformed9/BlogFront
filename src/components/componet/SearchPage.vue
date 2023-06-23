@@ -1,9 +1,9 @@
 <template class="all">
-  <div class="body">
+  <div class="body animate__animated animate__fadeIn">
     <div class="videoContainer">
-      <video class="fullscreenVideo" id="bgVid" playsinline="" autoplay="" muted="" loop="">
-        <source src="@/assets/hutao.mp4" type="video/mp4">
-      </video>
+<!--      <video class="fullscreenVideo" id="bgVid" playsinline="" autoplay="" muted="" loop="">-->
+<!--        <source src="@/assets/hutao.mp4" type="video/mp4">-->
+<!--      </video>-->
     </div>
     <NavBar></NavBar>
     <div class="inputBox">
@@ -18,9 +18,10 @@
     </div>
     <div class="searchResult" style="margin-top: 20px;">
       <el-table
+          stripe
           :data="bloglist.list"
           :key="tableKey.key"
-          class="el-table"
+          class="el-table animate__animated animate__fadeIn"
           style="width: 80%">
         <el-table-column prop="title" label="标题" width="180">
           <template #default="scope">
@@ -129,6 +130,12 @@ const searchBlogList = async () => {
   background-color: rgba(0, 0, 0, 0%);
   /*box-shadow: inset 0 0 0 1px white;*/
   color: white;
+  margin-top: 30px;
+  margin-left: 70px;
+}
+
+.inputBox>>>.el-input__wrapper{
+  border-radius: 100px;
 }
 
 :deep(.el-input__inner) {
@@ -150,7 +157,7 @@ const searchBlogList = async () => {
 }
 
 .el-table {
-  color:
+  //color:
 }
 
 .videoContainer {
