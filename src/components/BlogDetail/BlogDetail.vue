@@ -100,6 +100,7 @@ const goAuthorSpace=()=>{
   //text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
   background-color: #fff;
   margin-top: 30px;
+  border-radius: 5px;
 }
 
 .title{
