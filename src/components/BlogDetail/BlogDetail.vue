@@ -2,17 +2,28 @@
   <div>
     <NavBar></NavBar>
   </div>
-  <ImageBackground class="wife-cover">
+  <div class="wife-cover">
   <div class="theBlogContent">
-    <span
-    ><h2>{{blog.title}}</h2> </span
-    ><el-divider />
-    <span><div v-html="blog.content"></div></span>
-    <h4 class="authorName" :key="blog.userNickname" @click="goAuthorSpace">{{blog.userNickname}}</h4>
+    <el-card>
+      <div class="title">
+        <h2><span>{{blog.title}}</span> </h2>
+      </div>
+      <div class="card-info">
+        <div class="user-info">
+          <span class="not-author-name">昵称:</span>
+          <span class="authorName" :key="blog.userNickname" @click="goAuthorSpace">{{blog.userNickname}}</span>
+        </div>
+        <div class="tag-info">
+          <span class="not-tag-name">文章标签:</span>
+          <span class="tag-name">标签</span>
+        </div>
+      </div>
+      <div class="content">
+      <div><span v-html="blog.content"></span></div>
+    </div>
+    </el-card>
   </div>
-
-
-  </ImageBackground>
+</div>
 </template>
 
 <script setup>
@@ -72,16 +83,79 @@ const goAuthorSpace=()=>{
 <style scoped>
 
 .wife-cover {
-  display:flex;
   align-items:flex-start;
   justify-content: center;
-
+  background:url("https://img1.imgtp.com/2023/06/21/MUzggJOL.png") no-repeat center fixed;
+  width: -webkit-fill-available;
+  height: 768px;
+  display: flex;
+  -webkit-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 .theBlogContent {
   text-align: center;
   position: absolute;
-  width: 100%;
-  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+  width: 80%;
+  //text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+  background-color: #fff;
+  margin-top: 30px;
+}
+
+.title{
+  font-size: 28px;
+  color: #222226;
+  font-weight: 600;
+  display: flex;
+}
+
+.card-info{
+  background-color: #f8f8f8;
+  border-radius: 10px;
+  padding: 10px 20px;
+  color: #999aaa;
+}
+
+.user-info{
+  display: flex;
+}
+
+.not-author-name{
+  font-size: 16px;
+
+}
+
+.authorName{
+  color: #555556;
+  font-size: 20px;
+  margin-left: 20px;
+}
+
+.tag-info{
+  margin-top: 10px;
+  display: flex;
+}
+
+.not-tag-name{
+  font-size: 14px;
+  align-items: center;
+  display: flex;
+}
+
+.tag-name{
+  background-color: #fff;
+  color: #5094d5;
+  border: 1px solid #eaeaef;
+  padding: 3px 6px;
+  font-size: 14px;
+  margin-left: 10px;
+  align-items: center;
+  display: flex;
+}
+
+.content{
+  margin-top: 30px;
+  color: #4d4d4d;
 }
 
 @media screen and (max-width: 900px) {
