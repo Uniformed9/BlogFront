@@ -2,12 +2,14 @@
 import {onMounted, nextTick, getCurrentInstance, ref} from "vue";
 import axios from "@/components/request/http"
 import router from "@/components/router/router";
+import {ElMessage} from "element-plus";
 // import {useStore} from "vuex";
 let intro="欢迎来到我的个人博客";
 // const store=useStore()
 const {proxy}=getCurrentInstance()
 const httpUrl=proxy.$key
 const blogs=ref([])
+const hotBlogs=ref([]);
 function startRead() {
     nextTick(() => {
         document.getElementById("index")
@@ -41,7 +43,19 @@ onMounted(()=>{
     // }).catch((error)=>{
     //     console.log(error)
     // })
+  gethotBlogs();
 })
+const gethotBlogs=async () => {
+  const {data, msg} = await axios.get(httpUrl + "/homepage/hotBlogs")
+  console.log("data", data)
+  console.log("msg", msg)
+  console.log("hotBlogs", hotBlogs)
+  if (data.data != null) {
+    hotBlogs.value = data.data
+  } else {
+    ElMessage.info("不存在已经发表的博客哦┭┮﹏┭┮")
+  }
+}
 </script>
 
 <template>
@@ -80,7 +94,7 @@ onMounted(()=>{
 
                 <el-col :sm="18">
                     <div class="recent-posts" id="recent-posts">
-                        <el-card shadow="hover" v-for="item in blogs">
+                        <el-card shadow="hover" v-for="item in hotBlogs">
                             <div class="recent-post-item">
                                 <div class="post-cover">
                                     <a href="" title="item.title">
@@ -98,6 +112,9 @@ onMounted(()=>{
                                     <div style="margin-top: 10px;font-size: xx-small;text-align: left" >
                                         作者:<a @click="changeToUser(item.userId)" class="hover-effect">{{item.userNickname}}</a>
                                     </div>
+                                  <div style="margin-top: 10px;font-size: xx-small;text-align: right" >
+                                    浏览量:<a class="hover-effect">{{item.views}}</a>
+                                  </div>
                                 </div>
 
                             </div>
