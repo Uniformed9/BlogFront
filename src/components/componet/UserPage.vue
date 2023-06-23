@@ -1,20 +1,26 @@
 <script setup>
-import {getCurrentInstance, reactive, ref} from "vue";
+import {getCurrentInstance, onMounted, reactive, ref} from "vue";
 import avatar from "@/assets/pageIndex.jpg"
 import {get} from "@/components/request/request.js"
 import {ElMessage} from "element-plus";
 import axios from "@/components/request/http.js";
-// import {useRouter} from "vue-router/dist/vue-router";
-
+import {useRouter} from "vue-router/dist/vue-router";
+import {useRoute} from "vue-router";
+const route=useRoute()
+const userId=route.params.userId
+const router=useRouter()
 const {proxy} = getCurrentInstance()
 const httpUrl = proxy.$key
 const showSectionId = ref('#info')
+const user=ref({})
+const avatarUrl=ref("")
 const newFavoritesName = reactive({
   name: ""
 })
 const isopen = reactive({
   map: {}
 })
+
 // const router = useRouter()
 const introduceList = [
   {
@@ -63,13 +69,13 @@ const favoritesBlogMap = reactive({
 const tagsOfFavorites = reactive({
   map: {}
 })
-const userId = 1
+
 const createFavoritesDialog = reactive({
   visible: false
 })
 const getFavorites = async () => {
   try {
-    const {data, msg} = await get(httpUrl + "/user/" + 1 + "/home/favorites")
+    const {data, msg} = await get(httpUrl + "/user/" + userId + "/home/favorites")
     console.log(data)
     // console.log(msg)
     if (data == null) {
@@ -96,7 +102,7 @@ const removeBlogFromFavorites = async (favoritesId, blogId) => {
 
 const getTagsByBlogId = async function (blogId) {
   try {
-    const {data} = await get(httpUrl + "/blog/" + blogId + "/tags")
+    const {data} = await get(httpUrl + "/blogs/" + blogId + "/tags")
     // console.log(blogId)
     // console.log(data)
     // console.log(msg)
@@ -146,7 +152,39 @@ const getBlogByFavorites = async () => {
     return false
   }
 }
+const download=async (row) => {
+    axios({
+        url: "http://localhost:8070/file/download",
+        method: 'get',
+        responseType: 'arraybuffer',
+        params:{
+            location: row
+        }
+    }).then(res => {
+        const blob = new Blob([res.data]);
+        const url=URL.createObjectURL(blob)
+        avatarUrl.value=url
+    })
+}
+onMounted(()=>{
+    console.log(userId)
 
+    axios({
+        url:"http://localhost:8070/user/getById",
+        method:"get",
+        headers:{
+            "Content-Type":"application/x-www-form-urlencoded;charset=utf-8"
+        },
+        params:{
+            id:userId
+        }
+    }).then((res)=>{
+        console.log("------")
+        user.value=res.data.data
+        console.log(user.value)
+        download(user.value.avatar)
+    })
+})
 const deleteFavorites = async (favoritesId) => {
   await axios.delete(httpUrl + "/user/" + userId + "/home/favorites/" + favoritesId)
   await getFavorites()
@@ -245,7 +283,10 @@ const hobbyList = [
 const showSection = (name) => {
   showSectionId.value = name
 }
-
+const writeBlog=()=>{
+    console.log("-----")
+    router.push("/BlogCreate")
+}
 setTimeout(async () => {
   await getMyBlogs()
   await getFavorites()
@@ -273,13 +314,14 @@ setTimeout(async () => {
   <div class="box">
     <aside class="animate__animated animate__bounceInLeft sidebar">
       <div class="avatar">
-        <img :src="avatar" title="Hikari">
+          <img :src="avatarUrl" title="Hikari">
       </div>
       <nav class="nav">
         <a v-for="intro in introduceList" @click="showSection(intro.name)" :key="intro.id">{{ intro.title }}</a>
         <!--          <i :class="intro.icon" style="margin-right: 10px"></i>-->
       </nav>
     </aside>
+
     <main>
       <section class="animate__animated animate__fadeInRight" v-if="showSectionId === '#info'" id="info">
         <div class="wrap">
@@ -315,7 +357,7 @@ setTimeout(async () => {
         <div class="wrap">
           <div style="display: flex;align-items: center;">
             <h2 class="title"><i class="iconfont icon-zhuanye"></i>我的博客&emsp;&emsp;</h2>
-            <el-link :to="'/blogwrite'">
+            <el-link :to="'/BlogCreate'" @click="writeBlog">
               写一篇博客
             </el-link>
           </div>
@@ -402,6 +444,7 @@ setTimeout(async () => {
                             {{ scope.row.title }}
                           </el-link>
                         </template>
+
                       </el-table-column>
                       <el-table-column prop="userNickname" label="作者" width="180">
                         <template #default="scope">

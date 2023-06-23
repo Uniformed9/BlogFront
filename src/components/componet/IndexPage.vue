@@ -1,6 +1,7 @@
 <script setup>
 import {onMounted, nextTick, getCurrentInstance, ref} from "vue";
 import axios from "@/components/request/http"
+import router from "@/components/router/router";
 // import {useStore} from "vuex";
 let intro="欢迎来到我的个人博客";
 // const store=useStore()
@@ -15,6 +16,13 @@ function startRead() {
                 block: 'start'
             })
     })
+}
+const changeToInfo=(userId,id)=>{
+    console.log(userId,id)
+    router.push("/blogs/"+userId+"/"+id)
+}
+const changeToUser=(userId)=>{
+    router.push("/user/"+userId)
 }
 onMounted(()=>{
     axios({
@@ -34,7 +42,6 @@ onMounted(()=>{
     //     console.log(error)
     // })
 })
-
 </script>
 
 <template>
@@ -83,13 +90,13 @@ onMounted(()=>{
                                 </div>
                                 <div class="recent-post-info" >
                                     <div class="article-title-date">
-                                        <a class="article-title" title="item.title">{{item.title}}</a>
+                                        <a class="article-title hover-effect" title="item.title"   @click="changeToInfo(item.userId,item.id)">{{item.title}}</a>
                                     </div>
                                     <div class="article-description" >
                                      {{item.description}}
                                     </div>
                                     <div style="margin-top: 10px;font-size: xx-small;text-align: left" >
-                                        作者:<a href="/BlogCreate">{{item.userNickname}}</a>
+                                        作者:<a @click="changeToUser(item.userId)" class="hover-effect">{{item.userNickname}}</a>
                                     </div>
                                 </div>
 
@@ -108,7 +115,11 @@ onMounted(()=>{
 body {
   width: 100%;
 }
-
+.hover-effect:hover {
+    color: red;
+    cursor:pointer;
+    /* 在这里添加其他样式 */
+}
 .welcome {
   background-color: rgba(0, 0, 0, 0.1);
   border: none;

@@ -3,6 +3,7 @@ import { getCurrentInstance, onMounted, reactive, ref} from "vue";
 import axios from "@/components/request/http";
 import {useStore} from "vuex";
 import {useRouter} from "vue-router";
+import {ElMessage} from "element-plus";
 const router=useRouter()
 const store=useStore()
 // 传入标题,描述,内容,标签
@@ -43,7 +44,11 @@ const submit=async (param)=>{
     let mytag=Object.values(value1.value)
 
     await axios.post(httpUrl+"/user/"+id.value+"/home/blogs/"+blogId.value+"/tag",mytag)
-    await router.push("/index")
+    ElMessage({
+        type:"success",
+        message:"创建博客成功"
+    })
+    await router.go(-1)
 }
 
 onMounted(()=>{
