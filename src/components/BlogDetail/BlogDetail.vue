@@ -19,7 +19,7 @@
           <el-text class="views-name">{{blog.views}}</el-text>
         </div>
         </div>
-        <div class="tag-info">
+        <div v-show="tagsOfBlog.list!=null" class="tag-info">
           <span class="not-tag-name">标签:&emsp;</span>
           <span v-for="tag in tagsOfBlog.list" :key="tag">
               <span v-if="tag.id==0">无标签</span>
