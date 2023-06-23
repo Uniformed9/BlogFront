@@ -82,15 +82,7 @@ const gethotBlogs=async () => {
     <el-container class="layout">
         <el-main id="index" class="animate__animated animate__fadeInUp" >
             <el-row>
-                <el-col :sm="6">
-                    <div class="aside-content">
-                        <el-card class="card-widget" shadow="hover">
-                            <div class="card-title"><span>热门博客:</span></div>
-                            <div class="card-list">博客1</div>
-                            <div class="card-list">博客2</div>
-                        </el-card>
-                    </div>
-                </el-col>
+
 
                 <el-col :sm="18">
                     <div class="recent-posts" id="recent-posts">
@@ -808,11 +800,7 @@ el-image {
     text-align: start;
 }
 
-@media screen and (min-width: 900px) {
-    .aside-content{
-        padding-right: 15px;
-    }
-}
+
 
 .card-title{
     font-size: 1.5em;
