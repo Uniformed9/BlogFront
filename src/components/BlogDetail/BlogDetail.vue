@@ -21,11 +21,14 @@
       <div class="content">
       <div><span v-html="blog.content"></span></div>
     </div>
+      <div class="love-button">
+        <el-button class="button" text @click="getFavoriteList();dialogTableVisible = true">
+          收藏本文章
+        </el-button>
+      </div>
     </el-card>
 
-    <el-button text @click="getFavoriteList();dialogTableVisible = true">
-      收藏本文章
-    </el-button>
+
 
     <el-dialog v-model="dialogTableVisible" title="收藏夹列表">
       <el-table :data="favoriteData">
@@ -234,8 +237,26 @@ const addFavoriteBlogto=async id => {
 }
 
 .content{
+  display: flex;
   margin-top: 30px;
   color: #4d4d4d;
+}
+
+.love-button{
+  display: flex;
+  margin-top: 30px;
+  justify-content: end;
+  align-items: center;
+}
+
+.button{
+  background-color: #e5e9ef;
+}
+
+.button:hover{
+  background-color: #b3b2b8;
+  color:#3a8ee6;
+  border: 1px solid #eeeee6;
 }
 
 @media screen and (max-width: 900px) {
