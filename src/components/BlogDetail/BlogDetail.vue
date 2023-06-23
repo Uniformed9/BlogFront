@@ -9,17 +9,22 @@
         <h2><span>{{blog.title}} </span> </h2>
       </div>
       <div class="card-info">
+        <div style="display: flex;align-items: center;">
         <div class="user-info">
-          <span class="not-author-name">昵称:</span>
-          <span class="authorName" :key="blog.userNickname" @click="goAuthorSpace">{{blog.userNickname}}</span>
-        </div>
-        <div class="tag-info">
-          <span class="not-tag-name">文章标签:</span>
-          <span class="tag-name">标签</span>
+          <el-text type="info" class="not-author-name">作者:</el-text>
+          <el-text type="info" class="authorName" :key="blog.userNickname" @click="goAuthorSpace">{{blog.userNickname}}&emsp;</el-text>
         </div>
         <div class="views-info">
-          <span class="not-views-name">浏览量:</span>
-          <span class="views-name">{{blog.views}}</span>
+          <el-text type="info" class="not-views-name">浏览量:</el-text>
+          <el-text class="views-name">{{blog.views}}</el-text>
+        </div>
+        </div>
+        <div class="tag-info">
+          <span class="not-tag-name">标签:&emsp;</span>
+          <span v-for="tag in tagsOfBlog.list" :key="tag">
+              <span v-if="tag.id==0">无标签</span>
+              <span v-else><el-tag>{{ tag.name }}</el-tag></span>
+            </span>
         </div>
       </div>
       <div class="content">
@@ -35,6 +40,9 @@
 
 
     <el-dialog v-model="dialogTableVisible" title="收藏夹列表">
+      <el-button :type="'primary'" text size="large" @click="createFavoritesDialog.visible = true">
+        新建收藏夹
+      </el-button>
       <el-table :data="favoriteData">
 
         <el-table-column
@@ -47,11 +55,28 @@
 
         <el-table-column fixed="right" label="操作" width="150">
           <template v-slot="scope">
-          <el-button text @click="addFavoriteBlogto(scope.row.id)">添加</el-button>
+          <el-button text @click="addFavoriteBlogto(scope.row.id);getFavoriteList()">添加</el-button>
           </template>
         </el-table-column>
 
       </el-table>
+    </el-dialog>
+
+    <el-dialog
+        v-model="createFavoritesDialog.visible"
+        title="新建收藏夹"
+        width="30%"
+        :before-close="handleClose">
+              <span>
+                <el-text class="mx-1" style="padding-right: 300px">标题</el-text>
+                <el-input v-model="newFavoritesName.name" placeholder="请输入标题"/>
+              </span>
+      <template #footer>
+                <span class="dialog-footer">
+<!--                  <el-button @click="createFavoritesDialog.visible = false">算了</el-button>-->
+                  <el-button type="primary" @click="createNewFavorites(newFavoritesName.name)">添加</el-button>
+                </span>
+      </template>
     </el-dialog>
 
   </div>
@@ -72,6 +97,46 @@ import router from "@/components/router/router";
 import store from "@/components/store";
 const {proxy} =getCurrentInstance();
 const httpUrl = proxy.$key
+
+const tagsOfBlog = reactive({
+  list:[]
+})
+
+const getTagsByBlogId = async function (blogId) {
+  console.log("in")
+  try {
+    const {data} = await axios.get(httpUrl + "/blog/" + blogId + "/tags")
+    console.log(data)
+    return data.data
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+const createFavoritesDialog=reactive({
+  visible:false
+})
+
+const newFavoritesName = reactive({
+  name: ""
+})
+
+const createNewFavorites = async (name) => {
+  console.log(name)
+  if (name === "") {
+    ElMessage({
+      message: "标题不能为空😡😡",
+      type: 'error',
+    })
+    return
+  }
+  await axios.post(httpUrl + "/user/" + myid + "" + "/home/favorites/" + name)
+  // await getFavorites()
+  // await getBlogByFavorites()
+  createFavoritesDialog.visible = false
+  getFavoriteList()
+}
+
 
 const blog=ref({
         id:"",
@@ -117,7 +182,8 @@ onMounted(()=>{
       blog.value.title = data.data.title
       blog.value.views = data.data.views
       blog.value.userNickname=data.data.userNickname
-
+      tagsOfBlog.list = await getTagsByBlogId(data.data.id)
+      console.log(tagsOfBlog.list)
     } else {
       ElMessage.error('显示失败')
     }
@@ -215,7 +281,7 @@ const addFavoriteBlogto=async id => {
 }
 
 .not-author-name{
-  font-size: 16px;
+  font-size: 14px;
 
 }
 .views-info{
@@ -229,8 +295,15 @@ const addFavoriteBlogto=async id => {
 
 .authorName{
   color: #555556;
-  font-size: 20px;
-  margin-left: 20px;
+  font-size: 18px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.views-name{
+  font-size: 15px;
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
 .tag-info{
