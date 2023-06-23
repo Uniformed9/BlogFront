@@ -117,7 +117,7 @@ const getTagsByBlogId = async function (blogId) {
 
 const searchBlogList = async () => {
   try {
-    const {data, msg} = await axios.get(httpUrl + "/blog/search/" + inputContent.value)
+    const {data, msg} = await axios.get(httpUrl + "/blog/search/" + inputContent.value.trim())
     console.log("in function:" + inputContent.value)
     if (data == null) {
       ElMessage({
