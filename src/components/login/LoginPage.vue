@@ -28,7 +28,6 @@ import {computed, getCurrentInstance, onMounted, reactive, ref} from "vue";
 import {ElMessage} from "element-plus";
 import {post} from "@/components/request/request";
 import axios from"@/components/request/http"
-const {loginFormVisiable}=useMapState(['loginFormVisiable'])
 const store =useStore()
 const router=useRouter()
 const loginFormRef=ref()
