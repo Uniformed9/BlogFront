@@ -25,8 +25,8 @@ const introduceList = [
   },
   {
     id: 1,
-    title: '技能',
-    name: '#skills',
+    title: '我的博客',
+    name: '#myblogs',
     icon: 'iconfont icon-jinengliang-xian'
   },
   {
@@ -48,13 +48,19 @@ const introduceList = [
     icon: 'iconfont icon-ziwopingjia'
   },
 ]
+const myBlogs = reactive({
+  list: []
+})
+const tagsOfMyBlogs = reactive({
+  map: {}
+})
 const favoritesList = reactive({
   list: []
 })
-const blogMap = reactive({
+const favoritesBlogMap = reactive({
   map: {}
 })
-const tags = reactive({
+const tagsOfFavorites = reactive({
   map: {}
 })
 const userId = 1
@@ -65,7 +71,7 @@ const getFavorites = async () => {
   try {
     const {data, msg} = await get(httpUrl + "/user/" + 1 + "/home/favorites")
     console.log(data)
-    console.log(msg)
+    // console.log(msg)
     if (data == null) {
       ElMessage({
         message: msg,
@@ -90,20 +96,20 @@ const removeBlogFromFavorites = async (favoritesId, blogId) => {
 
 const getTagsByBlogId = async function (blogId) {
   try {
-    const {data, msg} = await get(httpUrl + "/blog/" + blogId + "/tags")
+    const {data} = await get(httpUrl + "/blog/" + blogId + "/tags")
     // console.log(blogId)
     // console.log(data)
-    console.log(msg)
+    // console.log(msg)
     return data
   } catch (err) {
-    console.log(err)
+    // console.log(err)
   }
 }
 
 const getBlogByFavorites = async () => {
   try {
     const {data, msg} = await get(httpUrl + "/user/" + userId + "/home/favorites/allblog")
-    console.log(data)
+    // console.log(data)
     if (data == null) {
       ElMessage({
         message: msg,
@@ -115,23 +121,23 @@ const getBlogByFavorites = async () => {
        * key是收藏夹id
        */
       for (const key in data) {
-        blogMap.map[key] = data[key]
+        favoritesBlogMap.map[key] = data[key]
         isopen.map[key] = false
-        tags.map[key] = reactive({
+        tagsOfFavorites.map[key] = reactive({
           tagMap: {}
         })
         await getTagsByBlogId(1)
-        if (blogMap.map[key] != null) {
+        if (favoritesBlogMap.map[key] != null) {
 
-          for (const blog of blogMap.map[key]) {
+          for (const blog of favoritesBlogMap.map[key]) {
             const temp = await getTagsByBlogId(blog['id'])
-            tags.map[key].tagMap[blog['id']] = temp == null ? [{"id": 0}] : temp
-            console.log(tags.map[key].tagMap[blog['id']])
+            tagsOfFavorites.map[key].tagMap[blog['id']] = temp == null ? [{"id": 0}] : temp
+            // console.log(tagsOfFavorites.map[key].tagMap[blog['id']])
           }
         }
       }
-      console.log(blogMap.map)
-      console.log(tags)
+      // console.log(favoritesBlogMap.map)
+      // console.log(tagsOfFavorites)
       return data
     }
   } catch
@@ -145,6 +151,11 @@ const deleteFavorites = async (favoritesId) => {
   await axios.delete(httpUrl + "/user/" + userId + "/home/favorites/" + favoritesId)
   await getFavorites()
   await getBlogByFavorites()
+}
+
+const deleteBlog = async (blogId) => {
+  await axios.delete(httpUrl + "/user/" + userId + "/home/blogs/" + blogId)
+  await getMyBlogs()
 }
 
 const createNewFavorites = async (name) => {
@@ -162,6 +173,24 @@ const createNewFavorites = async (name) => {
   createFavoritesDialog.visible = false
 }
 
+const getMyBlogs = async () => {
+  try {
+    const {data, msg} = await get(httpUrl + "/user/" + userId + "/home/blogs")
+    console.log(data)
+    console.log(msg)
+    myBlogs.list = data
+    console.log(myBlogs.list)
+    for (const blog of myBlogs.list) {
+      console.log(blog)
+      const temp = await getTagsByBlogId(blog['id'])
+      tagsOfMyBlogs.map[blog['id']] = temp == null ? [{"id": 0}] : temp
+    }
+  } catch
+      (err) {
+    console.log(err)
+    return false
+  }
+}
 
 const hobbyList = [
   {
@@ -218,6 +247,7 @@ const showSection = (name) => {
 }
 
 setTimeout(async () => {
+  await getMyBlogs()
   await getFavorites()
   await getBlogByFavorites()
 }, 10)
@@ -281,65 +311,63 @@ setTimeout(async () => {
           </el-row>
         </div>
       </section>
-      <section class="animate__animated animate__fadeInRight" v-show="showSectionId === '#skills'" id="skills">
+      <section class="animate__animated animate__fadeInRight" v-show="showSectionId === '#myblogs'" id="myblogs">
         <div class="wrap">
-          <h2 class="title"><i class="iconfont icon-zhuanye"></i> 掌握的技能</h2>
-          <el-row :gutter="40" class="row scrollable">
-            <el-col :sm="8" :xs="24" class="center-fixed">
-              <div class="skills-icon">
-                <i class="iconfont icon-html"></i>
-              </div>
-              <div class="skills-title">
-                <h3>HTML5</h3>
-                <p>熟悉 HTML5 网站的架构和开发</p>
-              </div>
-            </el-col>
-            <el-col :sm="8" :xs="24" class="center-fixed">
-              <div class="skills-icon">
-                <i class="iconfont icon-css1"></i>
-              </div>
-              <div class="skills-title">
-                <h3>CSS3</h3>
-                <p>熟悉使用 CSS3 写响应式网站、动画等</p>
-              </div>
-            </el-col>
-            <el-col :sm="8" :xs="24" class="center-fixed">
-              <div class="skills-icon">
-                <i class="iconfont icon-logo-javascript"></i>
-              </div>
-              <div class="skills-title">
-                <h3>JavaScript</h3>
-                <p>能使用 JS 制作简单的程序、交互与后端数据的获取</p>
-              </div>
-            </el-col>
-            <el-col :sm="8" :xs="24" class="center-fixed">
-              <div class="skills-icon">
-                <i class="iconfont icon-Vue"></i>
-              </div>
-              <div class="skills-title">
-                <h3>Vue</h3>
-                <p>熟悉Vue的开发流程，能够使用Vue框架开发完整项目</p>
-              </div>
-            </el-col>
-            <el-col :sm="8" :xs="24" class="center-fixed">
-              <div class="skills-icon">
-                <i class="iconfont icon-java"></i>
-              </div>
-              <div class="skills-title">
-                <h3>Java</h3>
-                <p>熟悉Java语言的基本使用，能使用SpringBoot进行后端开发</p>
-              </div>
-            </el-col>
-            <el-col :sm="8" :xs="24" class="center-fixed">
-              <div class="skills-icon">
-                <i class="iconfont icon-shujujiegou-01"></i>
-              </div>
-              <div class="skills-title">
-                <h3>计算机专业基础</h3>
-                <p>熟悉基本的数据结构，算法，计算机网络等相关知识</p>
-              </div>
-            </el-col>
-          </el-row>
+          <div style="display: flex;align-items: center;">
+            <h2 class="title"><i class="iconfont icon-zhuanye"></i>我的博客&emsp;&emsp;</h2>
+            <el-link :to="'/blogwrite'">
+              写一篇博客
+            </el-link>
+          </div>
+          <div class="blog-item">
+            <el-card class="blog-card">
+              <el-table
+                  :data="myBlogs.list"
+                  class="el-table"
+                  style="width: 100%">
+                <el-table-column prop="title" label="标题" width="180">
+                  <template #default="scope">
+                    <el-link :to="'/blog/'+scope.row.id">
+                      {{ scope.row.title }}
+                    </el-link>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="userNickname" label="作者" width="180">
+                  <template #default="scope">
+                    <el-link :to="'/home/'+scope.row.userId">
+                      {{ scope.row.userNickname }}
+                    </el-link>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="description" label="简介" width="300"/>
+                <el-table-column label="标签" width="200">
+                  <template #default="scope">
+                          <span v-for="tag in tagsOfMyBlogs.map[scope.row.id]" :key="tag">
+                              <span v-if="tag.id==0"></span>
+                            <span v-else><el-tag>{{ tag.name }}</el-tag></span>
+                          </span>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="createDate" label="创建日期" sortable/>
+                <el-table-column label="操作">
+                  <template #default="scope">
+                    <el-popconfirm
+                        width="220"
+                        confirm-button-text="删了😡"
+                        cancel-button-text="算了 留你一命🤤"
+                        :icon="InfoFilled"
+                        icon-color="#626AEF"
+                        title="真的要删了我吗？"
+                        @confirm="deleteBlog(scope.row.id)">
+                      <template #reference>
+                        <el-button>删除博客</el-button>
+                      </template>
+                    </el-popconfirm>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </el-card>
+          </div>
         </div>
       </section>
       <section class="animate__animated animate__fadeInRight" v-show="showSectionId === '#favorites'" id="favorites">
@@ -363,9 +391,9 @@ setTimeout(async () => {
                       <span>{{ isopen[favorites['id']] == true ? "折叠" : "展开" }}</span>
                     </div>
                   </div>
-                  <p v-if="blogMap.map[favorites['id']]!=null" v-show="isopen[favorites['id']]">
+                  <p v-if="favoritesBlogMap.map[favorites['id']]!=null" v-show="isopen[favorites['id']]">
                     <el-table
-                        :data="blogMap.map[favorites['id']]"
+                        :data="favoritesBlogMap.map[favorites['id']]"
                         class="el-table"
                         style="width: 100%">
                       <el-table-column prop="title" label="标题" width="180">
@@ -385,7 +413,7 @@ setTimeout(async () => {
                       <el-table-column prop="description" label="简介" width="300"/>
                       <el-table-column label="标签" width="200">
                         <template #default="scope">
-                          <span v-for="tag in tags.map[favorites['id']].tagMap[scope.row.id]" :key="tag">
+                          <span v-for="tag in tagsOfFavorites.map[favorites['id']].tagMap[scope.row.id]" :key="tag">
                               <span v-if="tag.id==0"></span>
                             <span v-else><el-tag>{{ tag.name }}</el-tag></span>
                           </span>
