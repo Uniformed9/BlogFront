@@ -6,6 +6,7 @@ import {ElMessage} from "element-plus";
 import axios from "@/components/request/http.js";
 import {useRouter} from "vue-router/dist/vue-router";
 import {useRoute} from "vue-router";
+import {IceCream} from "@element-plus/icons-vue";
 const route=useRoute()
 const userId=route.params.userId
 const router=useRouter()
@@ -297,27 +298,10 @@ setTimeout(async () => {
           <h2 class="title"><i class="iconfont icon-gerenzhongxin1"></i> 个人资料</h2>
           <el-row :gutter="20" class="row">
             <el-col :sm="8" :xs="24" class="col-l-4">
-              <p><i class="iconfont icon-name" style="margin-right: 5px"></i>姓名：Hikari</p>
-              <p><i class="iconfont icon-sex" style="margin-right: 5px"></i>性别：女</p>
-              <p><i class="iconfont icon-nianling" style="margin-right: 5px"></i>年龄：22</p>
-              <p><i class="iconfont icon-xueli" style="margin-right: 5px"></i>学历：本科</p>
-              <p><i class="iconfont icon-qq1" style="margin-right: 5px"></i>QQ：2569757226</p>
-              <p><i class="iconfont icon-shengao" style="margin-right: 5px"></i>身高：168cm</p>
-              <p><i class="iconfont icon-icon1" style="margin-right: 5px"></i>体重：52kg</p>
-              <p><i class="iconfont icon-shouye" style="margin-right: 5px"></i>血型：O型</p>
+              <p><i class="iconfont icon-name" style="margin-right: 5px"></i>姓名：{{user.nickName}}</p>
             </el-col>
             <el-col :sm="16" :xs="24" class="col-l-4">
-              <p><i class="iconfont icon-chushengriqi" style="margin-right: 5px"></i>出生日期：1999-03-20</p>
-              <p><i class="iconfont icon-xuexiao1" style="margin-right: 5px"></i>学校：XXXX大学</p>
-              <p><i class="iconfont icon-zhuanye1" style="margin-right: 5px"></i>专业：计算机科学与技术</p>
-              <p><i class="iconfont icon-xuefen" style="margin-right: 5px"></i>绩点：3.84 / 4</p>
-              <p><i class="iconfont icon-yingyu" style="margin-right: 5px"></i>英语水平：六级</p>
-              <p><i class="iconfont icon-gitee-fill-round" style="margin-right: 5px"></i>码云仓库：<a
-                  href="https://github.com">https://gitee.com/tyoubin_admin</a></p>
-              <p><i class="iconfont icon-csdn1" style="margin-right: 5px"></i>CSDN博客：<a
-                  href="https://blog.csdn.net/weixin_44996854">https://blog.csdn.net/weixin_44996854</a></p>
-              <p><i class="iconfont icon-email" style="margin-right: 5px"></i>邮箱：<a href="mailto:2569757226@qq.com">2569757226@qq.com</a>
-              </p>
+              <p><i v-show="user.email!=null" class="email" style="margin-right: 5px">邮箱：{{user.email}}</i></p>
             </el-col>
           </el-row>
         </div>
