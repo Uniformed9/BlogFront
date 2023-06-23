@@ -12,10 +12,13 @@
         <div style="display: flex;align-items: center;">
         <div class="user-info">
           <el-text type="info" class="not-author-name">作者:</el-text>
-          <el-text type="info" class="authorName" :key="blog.userNickname" @click="goAuthorSpace">{{blog.userNickname}}&emsp;</el-text>
+          <el-text type="info" class="authorName" :key="blog.userNickname" @click="goAuthorSpace(userid)">{{blog.userNickname}} </el-text>
         </div>
+          <div class="follow-button">
+            <el-button type="primary" icon="Check" circle @click=""/>
+          </div>
         <div class="views-info">
-          <el-text type="info" class="not-views-name">浏览量:</el-text>
+          <el-text type="info" class="not-views-name">&emsp;浏览量:</el-text>
           <el-text class="views-name">{{blog.views}}</el-text>
         </div>
         </div>
@@ -31,8 +34,8 @@
       <div><span v-html="blog.content"></span></div>
     </div>
       <div class="love-button">
-        <el-button class="button" text @click="getFavoriteList();dialogTableVisible = true">
-          收藏本文章
+        <el-button class="button" text @click="getFavoriteList();dialogTableVisible = true" icon="star" circle>
+
         </el-button>
       </div>
     </el-card>
@@ -55,7 +58,7 @@
 
         <el-table-column fixed="right" label="操作" width="150">
           <template v-slot="scope">
-          <el-button text @click="addFavoriteBlogto(scope.row.id);getFavoriteList()">添加</el-button>
+          <el-button text @click="addFavoriteBlogto(scope.row.id);getFavoriteList()">收藏</el-button>
           </template>
         </el-table-column>
 
