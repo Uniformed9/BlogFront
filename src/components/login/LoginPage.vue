@@ -33,7 +33,7 @@ const router=useRouter()
 const loginFormRef=ref()
 const {proxy}=getCurrentInstance()
 const httpUrl=proxy.$key
-
+const {loginFormVisiable}=useMapState(['loginFormVisiable'])
 const loginForm=reactive( {
     userName: '',
     password: ''

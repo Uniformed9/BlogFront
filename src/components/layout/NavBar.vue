@@ -58,6 +58,7 @@
                 <el-button size="mini" effect="light" type="primary" @click="showLFV">登录</el-button>
                 <el-button size="mini" effect="light" type="warning" @click="showRFV">注册</el-button>
             </div>
+
 <!--            显示头像-->
             <div v-else class="loginInfo">
                 <el-avatar  :src="user.avatarLocal"></el-avatar>
@@ -95,6 +96,8 @@ import {ElMessage} from "element-plus";
         const searchList=reactive([]);
         const store=useStore();
         const router =useRouter();
+
+
         let queryInfo=reactive({
             query: '',
             timer: null
@@ -137,7 +140,10 @@ import {ElMessage} from "element-plus";
         })
 
     const manageBlog=()=>{
-            router.push("/about")
+            //修改
+            // router.push("/about")
+
+            router.push("/user/"+user.value.id)
     }
     const createBlog=()=>{
             router.push("/BlogCreate")
@@ -198,6 +204,7 @@ import {ElMessage} from "element-plus";
         })
         const showLFV=()=> {
             // this.bgUrl = "url(\"http://www.dmoe.cc/random.php\")"
+            console.log("//")
            store.commit('showLFV')
 
         }

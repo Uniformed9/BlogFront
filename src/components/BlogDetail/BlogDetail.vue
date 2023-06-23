@@ -8,7 +8,7 @@
     ><h2>{{blog.title}}</h2> </span
     ><el-divider />
     <span><div v-html="blog.content"></div></span>
-    <h4 class="authorName" :key="blog.userNickname" @click="goAuthorSpace">author:{{blog.userNickname}}</h4>
+    <h4 class="authorName" :key="blog.userNickname" style="cursor: pointer" @click="goAuthorSpace(userid)">author:{{blog.userNickname}}</h4>
     <el-button text @click="getFavoriteList();dialogTableVisible = true">
       收藏本文章
     </el-button>
@@ -68,17 +68,15 @@ const route=useRoute();
 // console.log(route.query,route.params,"====");
 let blogid=3
 let userid=1
-let myid=1
+let myid=3
 onMounted(()=>{
   let blogID=route.params.blogId
   let userID=route.params.userId
-  // let myID=store.state.user.id
+  let myID=store.state.user.id
   blogid=blogID
   userid=userID
-  // myid=myID
+  myid=myID
   getBlogDetail();
-
-
 })
 
   const getBlogDetail=async ()=> {
@@ -97,12 +95,13 @@ onMounted(()=>{
       ElMessage.error('显示失败')
     }
   }
-const goAuthorSpace=()=>{
-  router.push({path:'/index'})
+const goAuthorSpace=(userid)=>{
+  router.push({path:'/user/'+userid})
   //路由尚未配置
 }
 const dialogTableVisible = ref(false)
 const getFavoriteList=async () => {
+    console.log(myid)
   const {data, msg} = await axios.get(httpUrl+"/user/"+myid+"/home/favorites")
   console.log("data", data)
   console.log("msg", msg)
@@ -139,6 +138,7 @@ const addFavoriteBlogto=async id => {
   else{
     await axios.post(httpUrl + "/user/" + myid + "/home/favorites/"+id+"/"+blogid)
     ElMessage.success("添加成功惹~(*╹▽╹*)")
+
   }
 
 }
