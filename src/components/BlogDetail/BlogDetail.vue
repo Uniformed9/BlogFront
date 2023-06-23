@@ -15,7 +15,7 @@
           <el-text type="info" class="authorName" :key="blog.userNickname" @click="goAuthorSpace(userid)">{{blog.userNickname}} </el-text>
         </div>
           <div class="follow-button">
-            <el-button type="primary" icon="Check" circle @click=""/>
+            <el-button type="primary" icon="Check" circle @click="followAuthor"/>
           </div>
         <div class="views-info">
           <el-text type="info" class="not-views-name">&emsp;浏览量:</el-text>
@@ -166,9 +166,11 @@ onMounted(()=>{
   let userID=route.params.userId
   let myID=store.state.user.id
   console.log(myID)
+
   blogid=blogID
   userid=userID
    myid=myID
+  console.log(myid)
   getBlogDetail();
   addviewcounts();
 
@@ -198,49 +200,89 @@ onMounted(()=>{
   }
 const goAuthorSpace=(userId)=>{
   router.push("/user/"+userId)
-  //路由尚未配置
+
 }
 const dialogTableVisible = ref(false)
 const getFavoriteList=async () => {
-  const {data, msg} = await axios.get(httpUrl+"/user/"+myid+"/home/favorites")
-  console.log("data", data)
-  console.log("msg", msg)
-  if(data.data!=null){
-    favorites.value=data.data
-  }
-  else{
-    ElMessage.error('不存在收藏夹')
-  }
-}
-const favoriteData = favorites;
-const addFavoriteBlogto=async id => {
-  const {data, msg} =await axios.get(httpUrl+"/user/"+myid+"/home/favorites/"+id)
-  console.log("data", data)
-  console.log("msg", msg)
-  console.log("favorites_id",id)
-  let isexist=false;
-  if(data.data!=null&&data!=null){
-    for(var i=0;i<data.data.length;i++) {
-      if (blogid == data.data[i].id) {
-        isexist = true;
-        break;
-      } else {
-        continue;
-      }
+  if (!myid) {
+    ElMessage.error("请先登录")
+    await router.push("/index")
+
+  } else {
+    const {data, msg} = await axios.get(httpUrl + "/user/" + myid + "/home/favorites")
+    console.log("data", data)
+    console.log("msg", msg)
+    if (data.data != null && myid != null) {
+      favorites.value = data.data
+    } else {
+      ElMessage.error('不存在收藏夹')
     }
   }
-  if(data==null){
-    ElMessage.error("没有这个收藏夹哦")
+}
+  const favoriteData = favorites;
+  const addFavoriteBlogto = async id => {
+    const {data, msg} = await axios.get(httpUrl + "/user/" + myid + "/home/favorites/" + id)
+    console.log("data", data)
+    console.log("msg", msg)
+    console.log("favorites_id", id)
+    let isexist = false;
+    if (data.data != null && data != null) {
+      for (var i = 0; i < data.data.length; i++) {
+        if (blogid == data.data[i].id) {
+          isexist = true;
+          break;
+        } else {
+          continue;
+        }
+      }
+    }
+    if (data == null) {
+      ElMessage.error("没有这个收藏夹哦")
+    } else if (isexist == true) {
+      ElMessage.error("已经在里面了捏o(*￣︶￣*)o")
+    } else {
+      await axios.post(httpUrl + "/user/" + myid + "/home/favorites/" + id + "/" + blogid)
+      ElMessage.success("添加成功惹~(*╹▽╹*)")
+    }
+
   }
-  else if(isexist==true){
-    ElMessage.error("已经在里面了捏o(*￣︶￣*)o")
-  }
-  else{
-    await axios.post(httpUrl + "/user/" + myid + "/home/favorites/"+id+"/"+blogid)
-    ElMessage.success("添加成功惹~(*╹▽╹*)")
+let tofollow=true;
+// if (!myid) {
+//   ElMessage.error("请先登录")
+//   await router.push("/index")
+// }else {
+//   const {data, msg} = await axios.get(httpUrl + "/follow/myfollows/" + myid)
+//   console.log(data)
+//   console.log(msg)
+//   if (data.data != null) {
+//     for (var i = 0; i < data.data.length; i++) {
+//       if (data.data[i].id === userid) {
+//         tofollow = false;
+//         break;
+//       }
+//     }
+//   }
+// }
+  const  followAuthor=async () => {
+    if (!myid) {
+      ElMessage.error("请先登录")
+      await router.push("/index")
+    }else{
+
+      if(tofollow ==true){
+        tofollow= !tofollow;
+        await axios.post(httpUrl+"/follow/"+myid+"/"+userid)
+        ElMessage.success("关注成功惹~")
+      }
+      else if(tofollow ==false){
+        tofollow= !tofollow;
+        await axios.delete(httpUrl+"/follow/"+myid+"/"+userid)
+        ElMessage.success("取关取关了喵~")
+      }
+    }
+
   }
 
-}
 
 </script>
 
