@@ -1,5 +1,30 @@
 <script setup>
+import {getCurrentInstance, onMounted, ref} from "vue";
+import axios from "@/components/request/http";
+import {ElMessage} from "element-plus";
+import router from "@/components/router/router";
+const {proxy}=getCurrentInstance()
+const httpUrl=proxy.$key
 
+const hotBlogs=ref([]);
+const changeToInfo=(userId,id)=>{
+  console.log(userId,id)
+  router.push("/blogs/"+userId+"/"+id)
+}
+const gethotBlogs=async () => {
+  const {data, msg} = await axios.get(httpUrl + "/homepage/hotBlogs")
+  console.log("data", data)
+  console.log("msg", msg)
+  console.log("hotBlogs", hotBlogs)
+  if (data.data != null) {
+    hotBlogs.value = data.data
+  } else {
+    ElMessage.info("不存在已经发表的博客哦┭┮﹏┭┮")
+  }
+}
+onMounted(()=> {
+  gethotBlogs();
+})
 </script>
 
 <template>
@@ -8,16 +33,15 @@
             <el-row>
                 <el-col :sm="6">
                     <div class="aside-content">
-                        <el-card class="card-widget" shadow="hover">
-                            <div class="card-title"><span>热门博客:</span></div>
-                            <div class="card-list">博客1</div>
-                            <div class="card-list">博客2</div>
+                      <div class="card-title"><span>热门博客:</span></div>
+                        <el-card class="card-widget" shadow="hover" v-for="item in hotBlogs">
+                          <a class="article-title" title="item.title" @click="changeToInfo(item.userId,item.id)">{{item.title}}</a>
                         </el-card>
                     </div>
                 </el-col>
 
                 <el-col :sm="18">
-                    <div class="recent-posts" id="recent-posts">
+                    <div class="recent-posts" id="recent-posts" >
                         <el-card shadow="hover">
                             <div class="recent-post-item">
                                 <div class="post-cover">
