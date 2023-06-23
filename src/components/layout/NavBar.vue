@@ -4,7 +4,7 @@
         <div class="animate__animated animate__fadeIn title" :key="key" :style="{'background-image': bgUrl}"></div>
         <el-header :style="'margin-bottom:'+ headerBottom +'px'" class="animate__animated animate__fadeIn">
             <h2 class="animate__animated animate__swing logo" :key="shade" @click="shade++">Uni</h2>
-            <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" background-color="rgba(0,0,0,0)"
+            <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal"
                      style="border: none;"
                      router text-color="#fff" active-text-color="#ffd04b">
                 <el-menu-item :index="'/'+item.path" v-for="item in menulist" background-color="rgba(0,0,0,0)" :key="item.id" @click="changePage(item.path)">
@@ -58,12 +58,14 @@
                 <el-button size="mini" effect="light" type="primary" @click="showLFV">登录</el-button>
                 <el-button size="mini" effect="light" type="warning" @click="showRFV">注册</el-button>
             </div>
+
 <!--            显示头像-->
             <div v-else class="loginInfo">
-                <el-avatar :src="user.avatar"></el-avatar>
+                <el-avatar  :src="user.avatarLocal"></el-avatar>
                 <div class="user-option">
                     <h3 class="web-font nickname">{{user.nickName}}</h3>
-                    <p v-if="!logined" class="logout" @click="manageBlog">管理博客</p>
+                    <p class="logout" @click="createBlog">新建博客</p>
+                    <p v-if="!logined" class="logout" @click="manageBlog">个人资料</p>
                     <p class="logout" @click="logout">退出登录</p>
                 </div>
             </div>
@@ -93,8 +95,9 @@ import {ElMessage} from "element-plus";
         const  scrollFlag=ref(false);
         const searchList=reactive([]);
         const store=useStore();
-        console.log(store.state.loginFormVisiable)
         const router =useRouter();
+
+
         let queryInfo=reactive({
             query: '',
             timer: null
@@ -135,8 +138,15 @@ import {ElMessage} from "element-plus";
         const user=computed(()=>{
             return store.state.user
         })
+
     const manageBlog=()=>{
-            router.push("/about")
+            //修改
+            // router.push("/about")
+
+            router.push("/user/"+user.value.id)
+    }
+    const createBlog=()=>{
+            router.push("/BlogCreate")
     }
     const logout=()=>{
 
@@ -150,7 +160,14 @@ import {ElMessage} from "element-plus";
         //vue3新写法
         const changePage=(name) =>{
             // console.log(name)
-            store.commit('changePage',name);
+            // if(name==="博客"){
+            //     router.push("/index")
+            //     console.log(store.state.blogChange)
+            // }
+            //else{
+                store.commit('changePage',name);
+            // }
+
         }
         //this用不了
         const checkInput=()=> {
@@ -187,6 +204,7 @@ import {ElMessage} from "element-plus";
         })
         const showLFV=()=> {
             // this.bgUrl = "url(\"http://www.dmoe.cc/random.php\")"
+            console.log("//")
            store.commit('showLFV')
 
         }

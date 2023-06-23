@@ -5,6 +5,9 @@ export default createStore({
         userInfo: JSON.parse(window.sessionStorage.getItem('user')),
         token: JSON.parse(window.sessionStorage.getItem('token')),
         administrator:JSON.parse(window.sessionStorage.getItem('user'))!==null&&JSON.parse(window.sessionStorage.getItem('user')).type==='1',
+        blogInfo:JSON.parse(window.sessionStorage.getItem("blog")),
+
+        blogChange:false,
         loginFormVisiable:false,
         registorFormVisiable:false,
         haveUser:false,
@@ -17,9 +20,26 @@ export default createStore({
             nickName:'',
             token:'',
             avatar:''
+        },
+        blog:{
+            id:"",
+            commentabled:"",
+            creatTime:"",
+            content:"",
+            description:"",
+            published:"",
+            title:"",
+            updateDate:"",
+            updateTime:"",
+            views:"",
+            userId:"",
+            userNickName:"",
         }
     },
     mutations: {
+        setblogChange(state){
+            state.blogChange=!state.blogChange
+        },
         // 改变页面
         changePage(state,name){
             state.pageName = name
@@ -57,11 +77,20 @@ export default createStore({
             state.loginFormVisiable=false
 
         },
+        setAvatar(state,avatar){
+          state.user.avatar=avatar
+        },
+        setAvatarLocal(state,avatar){
+            state.user.avatarLocal =avatar
+        },
         showUser(state){
             state.haveUser = true
         },
         cancelUser(state){
             state.haveUser=false
+        },
+        hotBlogsListed(state,data){
+            state.blog=data
         },
         showLFV(state){
             state.loginFormVisiable = true

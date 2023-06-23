@@ -1,20 +1,26 @@
 <script setup>
-import {getCurrentInstance, reactive, ref} from "vue";
+import {getCurrentInstance, onMounted, reactive, ref} from "vue";
 import avatar from "@/assets/pageIndex.jpg"
 import {get} from "@/components/request/request.js"
 import {ElMessage} from "element-plus";
 import axios from "@/components/request/http.js";
-// import {useRouter} from "vue-router/dist/vue-router";
-
+import {useRouter} from "vue-router/dist/vue-router";
+import {useRoute} from "vue-router";
+const route=useRoute()
+const userId=route.params.userId
+const router=useRouter()
 const {proxy} = getCurrentInstance()
 const httpUrl = proxy.$key
 const showSectionId = ref('#info')
+const user=ref({})
+const avatarUrl=ref("")
 const newFavoritesName = reactive({
   name: ""
 })
 const isopen = reactive({
   map: {}
 })
+
 // const router = useRouter()
 const introduceList = [
   {
@@ -37,14 +43,14 @@ const introduceList = [
   },
   {
     id: 3,
-    title: '我的关注',
-    name: '#myfollows',
+    title: '爱好',
+    name: '#hobbys',
     icon: 'iconfont icon-xingquaihao'
   },
   {
     id: 4,
-    title: '我的粉丝',
-    name: '#followers',
+    title: '评价',
+    name: '#summary',
     icon: 'iconfont icon-ziwopingjia'
   },
 ]
@@ -63,33 +69,13 @@ const favoritesBlogMap = reactive({
 const tagsOfFavorites = reactive({
   map: {}
 })
-const userId = 1
+
 const createFavoritesDialog = reactive({
   visible: false
 })
-const followerList = reactive({
-  list: {}
-})
-const myFollowsList = reactive({
-  list: {}
-})
-
-const getMyFollows = async () => {
-  const {data} = await axios.get(httpUrl + "/follow/myfollows/" + userId)
-  console.log(data)
-  myFollowsList.list = data.data
-  console.log(myFollowsList.list)
-}
-
-const getFollower = async () => {
-  const {data} = await axios.get(httpUrl + "/follow/followers/" + userId)
-  console.log(data)
-  followerList.list = data.data
-}
-
 const getFavorites = async () => {
   try {
-    const {data, msg} = await get(httpUrl + "/user/" + 1 + "/home/favorites")
+    const {data, msg} = await get(httpUrl + "/user/" + userId + "/home/favorites")
     console.log(data)
     // console.log(msg)
     if (data == null) {
@@ -116,10 +102,13 @@ const removeBlogFromFavorites = async (favoritesId, blogId) => {
 
 const getTagsByBlogId = async function (blogId) {
   try {
-    const {data} = await get(httpUrl + "/blog/" + blogId + "/tags")
+    const {data} = await get(httpUrl + "/blogs/" + blogId + "/tags")
+    // console.log(blogId)
+    // console.log(data)
+    // console.log(msg)
     return data
   } catch (err) {
-    console.log(err)
+    // console.log(err)
   }
 }
 
@@ -163,7 +152,39 @@ const getBlogByFavorites = async () => {
     return false
   }
 }
+const download=async (row) => {
+    axios({
+        url: "http://localhost:8070/file/download",
+        method: 'get',
+        responseType: 'arraybuffer',
+        params:{
+            location: row
+        }
+    }).then(res => {
+        const blob = new Blob([res.data]);
+        const url=URL.createObjectURL(blob)
+        avatarUrl.value=url
+    })
+}
+onMounted(()=>{
+    console.log(userId)
 
+    axios({
+        url:"http://localhost:8070/user/getById",
+        method:"get",
+        headers:{
+            "Content-Type":"application/x-www-form-urlencoded;charset=utf-8"
+        },
+        params:{
+            id:userId
+        }
+    }).then((res)=>{
+        console.log("------")
+        user.value=res.data.data
+        console.log(user.value)
+        download(user.value.avatar)
+    })
+})
 const deleteFavorites = async (favoritesId) => {
   await axios.delete(httpUrl + "/user/" + userId + "/home/favorites/" + favoritesId)
   await getFavorites()
@@ -209,16 +230,67 @@ const getMyBlogs = async () => {
   }
 }
 
+const hobbyList = [
+  {
+    id: 0,
+    name: '网球',
+    pic_url: 'http://hikari.top/images/ab058900-9c31-4818-9f51-61a60f64f63c.jpeg',
+    desp: '网球是从大一开始学的一项运动，也是大学坚持最久的运动之一，技术一般般，但水平不高的比赛还是可以上场的，希望工作之后还有时间继续打球'
+  },
+  {
+    id: 1,
+    name: '跑步',
+    pic_url: 'http://hikari.top/images/a7e5f1a4-bd29-4e80-aa9f-793342014120.jpeg',
+    desp: '跑步是从大一那年的冬天开始的，最长的记录是19年跑完了半程马拉松的21.0975km，这是一项不管我年龄多大都想坚持下去的运动'
+  },
+  {
+    id: 2,
+    name: '二次元',
+    pic_url: 'http://hikari.top/images/10985f8b-91aa-429a-a515-5b1e9a5db40f.jpeg',
+    desp: '海贼，火影，网球王子，柯南，妖尾，进击的巨人......，从初中开始，基本上把长篇都看遍啦，二次元给我的生活天机了不少乐趣'
+  },
+  {
+    id: 3,
+    name: '日语',
+    pic_url: 'http://hikari.top/images/8429f6ed-7094-453e-96ab-b574cdfa2514.jpeg',
+    desp: '喜欢看动漫和听日语歌，所以就自然开始喜欢日语了，现在还只会基础，希望之后能有时间好好学学过N2吧'
+  },
+  {
+    id: 4,
+    name: '听音乐',
+    pic_url: 'http://hikari.top/images/1b9c534a-f097-4281-a15f-17727f364c27.jpeg',
+    desp: '这个不用多说，各种各样的音乐我都喜欢，而且喜欢边学习边听，哈哈'
+  },
+  {
+    id: 5,
+    name: '看电影',
+    pic_url: 'http://hikari.top/images/33705908-8614-4a9d-a6f6-39fe406a2c1b.jpeg',
+    desp: '比较喜欢科幻片，虽然因为没钱，没在电影院没看过几部，但这也算一个爱好吧'
+  },
+  {
+    id: 6,
+    name: '骑车',
+    pic_url: 'http://hikari.top/images/b05702ea-673b-46ff-8f03-17db351c3845.jpeg',
+    desp: '虽然我大学才雪会骑车，但看着别人出去远距离骑行也是挺羡慕的，希望有时间可以去试试'
+  },
+  {
+    id: 7,
+    name: '旅游',
+    pic_url: 'http://hikari.top/images/420f8f32-eff3-4062-85d0-92d8b68f62eb.jpeg',
+    desp: '这只能算一个美好的愿望，等我有钱了，要去各种各样的地方玩，体验不一样的生活'
+  },
+]
 const showSection = (name) => {
   showSectionId.value = name
 }
-
+const writeBlog=()=>{
+    console.log("-----")
+    router.push("/BlogCreate")
+}
 setTimeout(async () => {
   await getMyBlogs()
   await getFavorites()
   await getBlogByFavorites()
-  await getMyFollows()
-  await getFollower()
 }, 10)
 </script>
 
@@ -242,13 +314,14 @@ setTimeout(async () => {
   <div class="box">
     <aside class="animate__animated animate__bounceInLeft sidebar">
       <div class="avatar">
-        <img :src="avatar" title="Hikari">
+          <img :src="avatarUrl" title="Hikari">
       </div>
       <nav class="nav">
         <a v-for="intro in introduceList" @click="showSection(intro.name)" :key="intro.id">{{ intro.title }}</a>
         <!--          <i :class="intro.icon" style="margin-right: 10px"></i>-->
       </nav>
     </aside>
+
     <main>
       <section class="animate__animated animate__fadeInRight" v-if="showSectionId === '#info'" id="info">
         <div class="wrap">
@@ -284,7 +357,7 @@ setTimeout(async () => {
         <div class="wrap">
           <div style="display: flex;align-items: center;">
             <h2 class="title"><i class="iconfont icon-zhuanye"></i>我的博客&emsp;&emsp;</h2>
-            <el-link :to="'/blogwrite'">
+            <el-link :to="'/BlogCreate'" @click="writeBlog">
               写一篇博客
             </el-link>
           </div>
@@ -371,10 +444,11 @@ setTimeout(async () => {
                             {{ scope.row.title }}
                           </el-link>
                         </template>
+
                       </el-table-column>
                       <el-table-column prop="userNickname" label="作者" width="180">
                         <template #default="scope">
-                          <el-link :to="'http:/localhost:8080/#/home/'+scope.row.userId">
+                          <el-link :to="'/home/'+scope.row.userId">
                             {{ scope.row.userNickname }}
                           </el-link>
                         </template>
@@ -416,30 +490,29 @@ setTimeout(async () => {
           </el-row>
         </div>
       </section>
-      <section class="animate__animated animate__fadeInRight" v-show="showSectionId === '#myfollows'" id="myfollows">
-        <h2 class="title"><i class="iconfont icon-xingquaihao"></i>我的关注</h2>
-        <div class="follows">
-          <div v-for="user in myFollowsList.list" :key="user.id">
-            <span style="display: flex;align-items: center;">
-<!--              <a :href="'/#/home/1'">ok</a>-->
-              <a :herf="'/#/home/'+user.id" :underline="false">
-                <el-avatar :size="50" :src="user.avatar"/>
-              </a>
-              <el-link :to="'/home/'+user.id" :underline="false">
-                <el-tag>{{ user.userName }}</el-tag>
-              </el-link>
-            </span>
-          </div>
+      <section class="animate__animated animate__fadeInRight" v-show="showSectionId === '#hobbys'" id="hobbys">
+        <h2 class="title"><i class="iconfont icon-xingquaihao"></i>我的爱好</h2>
+        <div class="row">
+          <el-carousel :interval="2000" :type="cardOpen? 'card':''" height="350px">
+            <el-carousel-item v-for="hobby in hobbyList" :key="hobby.id">
+              <el-card class="hobby">
+                <el-image style="width: 100%" :src="hobby.pic_url"></el-image>
+                <h3 class="tit">{{ hobby.name }}</h3>
+                <p>{{ hobby.desp }}</p>
+              </el-card>
+            </el-carousel-item>
+          </el-carousel>
         </div>
       </section>
-      <section class="animate__animated animate__fadeInRight" v-show="showSectionId === '#followers'" id="followers">
+      <section class="animate__animated animate__fadeInRight" v-show="showSectionId === '#summary'" id="summary">
         <div class="wrap">
-          <h2 class="title"><i class="iconfont icon-ziwopingjia"></i>我的粉丝</h2>
-          <div v-for="user in followerList.list" :key="user.id">
-            <p style="display: flex;align-items: center;">
-              <el-avatar :size="50" :src="user.avatar"/>
-              <el-tag>{{ user.userName }}</el-tag>
-            </p>
+          <h2 class="title"><i class="iconfont icon-ziwopingjia"></i>自我评价</h2>
+          <div class="row">
+            <ul>
+              <li>一个对一切未知的事物都会抱有好奇心的人</li>
+              <li>一个希望用自己所有的精力将事情做到最尽可能完美的人</li>
+              <li>一个喜欢拥抱不确定性，爱折腾，去见不同的人，感受不同的环境，不喜欢一成不变的人</li>
+            </ul>
           </div>
         </div>
       </section>

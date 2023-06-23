@@ -26,14 +26,14 @@ import {useStore} from "vuex";
 import {useRouter} from "vue-router";
 import {computed, getCurrentInstance, onMounted, reactive, ref} from "vue";
 import {ElMessage} from "element-plus";
-import {post,postWithConfig} from "@/components/request/request";
-const {loginFormVisiable}=useMapState(['loginFormVisiable'])
+import {post} from "@/components/request/request";
+import axios from"@/components/request/http"
 const store =useStore()
 const router=useRouter()
 const loginFormRef=ref()
 const {proxy}=getCurrentInstance()
 const httpUrl=proxy.$key
-
+const {loginFormVisiable}=useMapState(['loginFormVisiable'])
 const loginForm=reactive( {
     userName: '',
     password: ''
@@ -68,11 +68,19 @@ const user=computed(()=>{
     return store.state.user
 })
 
-const download=async (avatar)=>{
-    if(user.value.avatar==='')return
-    else{
-        await postWithConfig(httpUrl+"/file/download",{location:avatar},{headers:{ "content-type": "application/x-www-form-urlencoded" }})
-    }
+const download=async (row) => {
+    axios({
+        url: httpUrl+"/file/download",
+        method: 'get',
+        responseType: 'arraybuffer',
+        params:{
+            location: row
+        }
+    }).then(res => {
+        const blob = new Blob([res.data]);
+        const url=URL.createObjectURL(blob)
+        store.commit("setAvatarLocal",url)
+    })
 }
 //用户登录
 const userLogin=async(loginFormRef)=>{
@@ -94,13 +102,13 @@ const userLogin=async(loginFormRef)=>{
                     console.log(data)
                     store.commit("constructUser",data)
                     //调用
-                    console.log(store.state.user.userName)
                     ElMessage({
                         message: '登陆成功',
                         type: 'success',
                     })
                     store.commit("cancelLFV")
-                    await download(user.value.avatar)
+                   await download(user.value.avatar)
+
                    await router.push({ path: "/" })
                     //关闭页面
 

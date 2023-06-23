@@ -11,4 +11,6 @@ function serchInMyBlogs(userId, term)
     let { data } = get(httpUrl + "/user/" + userId + "/home/blogs/search/" + term)
 }
 
-function createBlog(userId, title, content)
+function createBlog(userId, title, content){
+
+}

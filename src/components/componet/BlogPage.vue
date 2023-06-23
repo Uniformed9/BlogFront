@@ -601,11 +601,7 @@ el-image {
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
-    //-webkit-box-orient: horizontal;
-    //-moz-box-orient: horizontal;
-    //-webkit-flex-direction: row;
-    //-ms-flex-direction: row;
-    //flex-direction: row;
+
     -webkit-box-align: center;
     -moz-box-align: center;
     -ms-flex-align: center;
@@ -734,7 +730,7 @@ el-image {
     overflow: hidden;
     margin-top: 1rem;
     padding: 1rem 1.2rem;
-    background: var(--card-bg);
+    //background: var(--card-bg);
     //-webkit-box-shadow: var(--card-box-shadow);
     //box-shadow: var(--card-box-shadow);
     -webkit-transition: box-shadow 0.3s;
