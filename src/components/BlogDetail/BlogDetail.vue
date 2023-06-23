@@ -4,14 +4,31 @@
   </div>
   <ImageBackground class="wife-cover">
   <div class="theBlogContent">
-    <span
-    ><h2>{{blog.title}}</h2> </span
-    ><el-divider />
-    <span><div v-html="blog.content"></div></span>
-    <h4 class="authorName" :key="blog.userNickname" style="cursor: pointer" @click="goAuthorSpace(userid)">author:{{blog.userNickname}}</h4>
-    <el-button text @click="getFavoriteList();dialogTableVisible = true">
-      收藏本文章
-    </el-button>
+    <el-card>
+      <div class="title">
+        <h2><span>{{blog.title}}</span> </h2>
+      </div>
+      <div class="card-info">
+        <div class="user-info">
+          <span class="not-author-name">昵称:</span>
+          <span class="authorName" :key="blog.userNickname" @click="goAuthorSpace">{{blog.userNickname}}</span>
+        </div>
+        <div class="tag-info">
+          <span class="not-tag-name">文章标签:</span>
+          <span class="tag-name">标签</span>
+        </div>
+      </div>
+      <div class="content">
+      <div><span v-html="blog.content"></span></div>
+    </div>
+      <div class="love-button">
+        <el-button class="button" text @click="getFavoriteList();dialogTableVisible = true">
+          收藏本文章
+        </el-button>
+      </div>
+    </el-card>
+
+
 
     <el-dialog v-model="dialogTableVisible" title="收藏夹列表">
       <el-table :data="favoriteData">
@@ -68,15 +85,17 @@ const route=useRoute();
 // console.log(route.query,route.params,"====");
 let blogid=3
 let userid=1
-let myid=3
+let myid=1
 onMounted(()=>{
   let blogID=route.params.blogId
   let userID=route.params.userId
-  let myID=store.state.user.id
+  // let myID=store.state.user.id
   blogid=blogID
   userid=userID
-  myid=myID
+  // myid=myID
   getBlogDetail();
+
+
 })
 
   const getBlogDetail=async ()=> {
@@ -95,13 +114,12 @@ onMounted(()=>{
       ElMessage.error('显示失败')
     }
   }
-const goAuthorSpace=(userid)=>{
-  router.push({path:'/user/'+userid})
+const goAuthorSpace=()=>{
+  router.push({path:'/index'})
   //路由尚未配置
 }
 const dialogTableVisible = ref(false)
 const getFavoriteList=async () => {
-    console.log(myid)
   const {data, msg} = await axios.get(httpUrl+"/user/"+myid+"/home/favorites")
   console.log("data", data)
   console.log("msg", msg)
@@ -138,7 +156,6 @@ const addFavoriteBlogto=async id => {
   else{
     await axios.post(httpUrl + "/user/" + myid + "/home/favorites/"+id+"/"+blogid)
     ElMessage.success("添加成功惹~(*╹▽╹*)")
-
   }
 
 }
@@ -148,16 +165,98 @@ const addFavoriteBlogto=async id => {
 <style scoped>
 
 .wife-cover {
-  display:flex;
   align-items:flex-start;
   justify-content: center;
-
+  background:url("https://img1.imgtp.com/2023/06/21/MUzggJOL.png") no-repeat center fixed;
+  width: -webkit-fill-available;
+  height: 768px;
+  display: flex;
+  -webkit-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 .theBlogContent {
   text-align: center;
   position: absolute;
-  width: 100%;
-  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+  width: 80%;
+  //text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+  background-color: #fff;
+  margin-top: 30px;
+  border-radius: 5px;
+}
+
+.title{
+  font-size: 28px;
+  color: #222226;
+  font-weight: 600;
+  display: flex;
+}
+
+.card-info{
+  background-color: #f8f8f8;
+  border-radius: 10px;
+  padding: 10px 20px;
+  color: #999aaa;
+}
+
+.user-info{
+  display: flex;
+}
+
+.not-author-name{
+  font-size: 16px;
+
+}
+
+.authorName{
+  color: #555556;
+  font-size: 20px;
+  margin-left: 20px;
+}
+
+.tag-info{
+  margin-top: 10px;
+  display: flex;
+}
+
+.not-tag-name{
+  font-size: 14px;
+  align-items: center;
+  display: flex;
+}
+
+.tag-name{
+  background-color: #fff;
+  color: #5094d5;
+  border: 1px solid #eaeaef;
+  padding: 3px 6px;
+  font-size: 14px;
+  margin-left: 10px;
+  align-items: center;
+  display: flex;
+}
+
+.content{
+  display: flex;
+  margin-top: 30px;
+  color: #4d4d4d;
+}
+
+.love-button{
+  display: flex;
+  margin-top: 30px;
+  justify-content: end;
+  align-items: center;
+}
+
+.button{
+  background-color: #e5e9ef;
+}
+
+.button:hover{
+  background-color: #b3b2b8;
+  color:#3a8ee6;
+  border: 1px solid #eeeee6;
 }
 
 @media screen and (max-width: 900px) {
