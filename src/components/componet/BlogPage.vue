@@ -35,7 +35,7 @@ onMounted(()=> {
                     <div class="aside-content">
                       <div class="card-title"><span>热门博客:</span></div>
                         <el-card class="card-widget" shadow="hover" v-for="item in hotBlogs">
-                          <a class="article-title" title="item.title" @click="changeToInfo(item.userId,item.id)">{{item.title}}</a>
+                          <a class="article-title" title="item.title" @click="changeToInfo(item.userId,item.id)">{{item.title}}    <h6>views:{{item.views}}</h6></a>
                         </el-card>
                     </div>
                 </el-col>
