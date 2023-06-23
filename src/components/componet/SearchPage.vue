@@ -25,16 +25,17 @@
           style="width: 80%">
         <el-table-column prop="title" label="标题" width="180">
           <template #default="scope">
-            <el-link :to="'/blog/'+scope.row.id">
+<!--            <h1>{{// '/blogs/'+scope.row.userId+'/'+scope.row.id}}</h1>-->
+            <a  :href="'/blogs/'+scope.row.userId+'/'+scope.row.id">
               {{ scope.row.title }}
-            </el-link>
+            </a>
           </template>
         </el-table-column>
         <el-table-column prop="userNickname" label="作者" width="180">
           <template #default="scope">
-            <el-link :to="'/home/'+scope.row.userId">
+            <a :href="'/user/'+scope.row.userId">
               {{ scope.row.userNickname }}
-            </el-link>
+            </a>
           </template>
         </el-table-column>
         <el-table-column prop="description" label="简介" width="300"/>
