@@ -17,6 +17,10 @@
           <span class="not-tag-name">文章标签:</span>
           <span class="tag-name">标签</span>
         </div>
+        <div class="views-info">
+          <span class="not-views-name">浏览量:</span>
+          <span class="views-name">{{blog.views}}</span>
+        </div>
       </div>
       <div class="content">
       <div><span v-html="blog.content"></span></div>
@@ -73,7 +77,9 @@ const blog=ref({
         id:"",
         title:"default",
         content:"test content",
-        userNickname:null
+        userNickname:null,
+        views:null
+
       })
 const favorites=ref([])
 const favoritesHeader=ref({
@@ -94,7 +100,7 @@ onMounted(()=>{
   userid=userID
   // myid=myID
   getBlogDetail();
-
+  addviewcounts();
 
 })
 
@@ -109,10 +115,15 @@ onMounted(()=>{
       blog.value.id = data.data.id
       blog.value.content = data.data.content
       blog.value.title = data.data.title
+      blog.value.views = data.data.views
       blog.value.userNickname=data.data.userNickname
+
     } else {
       ElMessage.error('显示失败')
     }
+  }
+  const addviewcounts=async () => {
+    await axios.post(httpUrl+"/blog/view/"+blogid)
   }
 const goAuthorSpace=()=>{
   router.push({path:'/index'})
@@ -205,6 +216,14 @@ const addFavoriteBlogto=async id => {
 
 .not-author-name{
   font-size: 16px;
+
+}
+.views-info{
+  display: flex;
+}
+
+.not-views-name{
+  font-size: 14px;
 
 }
 
