@@ -6,7 +6,7 @@
   <div class="theBlogContent">
     <el-card>
       <div class="title">
-        <h2><span>{{blog.title}}</span> </h2>
+        <h2><span>{{blog.title}} </span> </h2>
       </div>
       <div class="card-info">
         <div class="user-info">
@@ -16,6 +16,10 @@
         <div class="tag-info">
           <span class="not-tag-name">文章标签:</span>
           <span class="tag-name">标签</span>
+        </div>
+        <div class="views-info">
+          <span class="not-views-name">浏览量:</span>
+          <span class="views-name">{{blog.views}}</span>
         </div>
       </div>
       <div class="content">
@@ -73,7 +77,9 @@ const blog=ref({
         id:"",
         title:"default",
         content:"test content",
-        userNickname:null
+        userNickname:null,
+        views:null
+
       })
 const favorites=ref([])
 const favoritesHeader=ref({
@@ -94,7 +100,7 @@ onMounted(()=>{
   userid=userID
   // myid=myID
   getBlogDetail();
-
+  addviewcounts();
 
 })
 
@@ -109,10 +115,15 @@ onMounted(()=>{
       blog.value.id = data.data.id
       blog.value.content = data.data.content
       blog.value.title = data.data.title
+      blog.value.views = data.data.views
       blog.value.userNickname=data.data.userNickname
+
     } else {
       ElMessage.error('显示失败')
     }
+  }
+  const addviewcounts=async () => {
+    await axios.post(httpUrl+"/blog/view/"+blogid)
   }
 const goAuthorSpace=()=>{
   router.push({path:'/index'})
@@ -207,6 +218,14 @@ const addFavoriteBlogto=async id => {
   font-size: 16px;
 
 }
+.views-info{
+  display: flex;
+}
+
+.not-views-name{
+  font-size: 14px;
+
+}
 
 .authorName{
   color: #555556;
@@ -278,19 +297,6 @@ const addFavoriteBlogto=async id => {
     margin-top: 0;
     opacity: 1;
   }
-}
-
- .el-button--text {
-   margin-right: 15px;
- }
-.el-select {
-  width: 300px;
-}
-.el-input {
-  width: 300px;
-}
-.dialog-footer button:first-child {
-  margin-right: 10px;
 }
 
 </style>
