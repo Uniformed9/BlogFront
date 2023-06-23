@@ -190,7 +190,10 @@ const deleteFavorites = async (favoritesId) => {
   await getFavorites()
   await getBlogByFavorites()
 }
-
+const updateBlog=(blogId)=>{
+    //到新的页面然后
+    router.push("/BlogUpdate/"+blogId)
+}
 const deleteBlog = async (blogId) => {
   await axios.delete(httpUrl + "/user/" + userId + "/home/blogs/" + blogId)
   await getMyBlogs()
@@ -392,7 +395,20 @@ setTimeout(async () => {
                 </el-table-column>
                 <el-table-column prop="createDate" label="创建日期" sortable/>
                 <el-table-column label="操作">
+
                   <template #default="scope">
+                      <el-popconfirm
+                              width="220"
+                              confirm-button-text="确认修改"
+                              cancel-button-text="取消"
+                              :icon="InfoFilled"
+                              icon-color="#626AEF"
+                              title="修改"
+                              @confirm="updateBlog(scope.row.id)">
+                          <template #reference>
+                              <el-button>修改博客</el-button>
+                          </template>
+                      </el-popconfirm>
                     <el-popconfirm
                         width="220"
                         confirm-button-text="删了😡"
@@ -405,6 +421,7 @@ setTimeout(async () => {
                         <el-button>删除博客</el-button>
                       </template>
                     </el-popconfirm>
+
                   </template>
                 </el-table-column>
               </el-table>

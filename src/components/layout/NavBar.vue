@@ -114,14 +114,10 @@ import {ElMessage} from "element-plus";
                 },
                 {
                     id: 3,
-                    authName: '项目',
-                    path: 'project'
+                    authName: '搜索',
+                    path: 'search'
                 },
-                {
-                    id: 4,
-                    authName: '留言',
-                    path: 'message'
-                },
+
                 {
                     id: 5,
                     authName: '关于我',
@@ -131,7 +127,7 @@ import {ElMessage} from "element-plus";
         let iconsObj= {
             '1': 'House',
                 '2': 'Reading',
-                '3': 'CopyDocument',
+                '3': 'Search',
                 '4': 'ChatDotSquare',
                 '5': 'User',
         };
@@ -204,7 +200,6 @@ import {ElMessage} from "element-plus";
         })
         const showLFV=()=> {
             // this.bgUrl = "url(\"http://www.dmoe.cc/random.php\")"
-            console.log("//")
            store.commit('showLFV')
 
         }

@@ -5,7 +5,7 @@
       <!--        <source src="@/assets/hutao.mp4" type="video/mp4">-->
       <!--      </video>-->
     </div>
-    <NavBar></NavBar>
+
     <div class="inputBox">
       <el-input v-model="inputContent"
                 class="searchinput"
@@ -23,20 +23,22 @@
               :data="bloglist.list"
               :key="tableKey.key"
               class=" animate__animated animate__fadeIn"
+              style="background-color: white"
               >
-            <el-table-column prop="title" label="标题" width="180">
+            <el-table-column prop="title" label="标题" width="180" >
               <template #default="scope">
-                <el-link :to="'/blog/'+scope.row.id">
+                <el-link class="cursor" @click="changeToBlog(scope.row.userId,scope.row.id)">
                   {{ scope.row.title }}
                 </el-link>
               </template>
             </el-table-column>
             <el-table-column prop="userNickname" label="作者" width="180">
               <template #default="scope">
-                <el-link :to="'/home/'+scope.row.userId">
+                <el-link class="cursor" @click="changeToUser(scope.row.userId)">
                   {{ scope.row.userNickname }}
                 </el-link>
               </template>
+
             </el-table-column>
             <el-table-column prop="description" label="简介" width="300"/>
             <el-table-column label="标签" width="200">
@@ -67,6 +69,7 @@ import {getCurrentInstance, reactive, ref, watch} from "vue";
 import {ElMessage} from "element-plus";
 import axios from "@/components/request/http";
 import {get} from "@/components/request/request";
+import router from "@/components/router/router";
 
 
 const {proxy} = getCurrentInstance()
@@ -90,7 +93,13 @@ setTimeout(async () => {
   await searchBlogList(inputContent)
   tableKey.key = Math.random()
 }, 10)
-
+const changeToBlog=(userId,id)=>{
+    console.log(userId,id)
+    router.push("/blogs/"+userId+"/"+id)
+}
+const changeToUser=(userId)=>{
+    router.push("/user/"+userId)
+}
 const getBlog = async () => {
   try {
     const {data} = await axios.get(httpUrl + "/blog/" + 20)
@@ -144,6 +153,10 @@ const searchBlogList = async () => {
 </script>
 
 <style scoped>
+.cursor:hover{
+    color:deepskyblue;
+    cursor: pointer;
+}
 .all {
   background-color: rgba(0, 0, 0, 0%);
 }
