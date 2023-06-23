@@ -1,9 +1,9 @@
 <template class="all">
   <div class="body animate__animated animate__fadeIn">
     <div class="videoContainer">
-<!--      <video class="fullscreenVideo" id="bgVid" playsinline="" autoplay="" muted="" loop="">-->
-<!--        <source src="@/assets/hutao.mp4" type="video/mp4">-->
-<!--      </video>-->
+      <!--      <video class="fullscreenVideo" id="bgVid" playsinline="" autoplay="" muted="" loop="">-->
+      <!--        <source src="@/assets/hutao.mp4" type="video/mp4">-->
+      <!--      </video>-->
     </div>
     <NavBar></NavBar>
     <div class="inputBox">
@@ -17,29 +17,45 @@
       <el-button :icon="Search" circle @click="searchBlogList()"/>
     </div>
     <div class="searchResult" style="margin-top: 20px;">
-      <el-table
-          stripe
-          :data="bloglist.list"
-          :key="tableKey.key"
-          class="el-table animate__animated animate__fadeIn"
-          style="width: 80%">
-        <el-table-column prop="title" label="标题" width="180">
-          <template #default="scope">
-            <el-link :to="'/blog/'+scope.row.id">
-              {{ scope.row.title }}
-            </el-link>
-          </template>
-        </el-table-column>
-        <el-table-column prop="userNickname" label="作者" width="180">
-          <template #default="scope">
-            <el-link :to="'/home/'+scope.row.userId">
-              {{ scope.row.userNickname }}
-            </el-link>
-          </template>
-        </el-table-column>
-        <el-table-column prop="description" label="简介" width="500"/>
-        <el-table-column prop="createDate" label="创建日期" sortable/>
-      </el-table>
+
+          <el-table
+              stripe
+              :data="bloglist.list"
+              :key="tableKey.key"
+              class=" animate__animated animate__fadeIn"
+              >
+            <el-table-column prop="title" label="标题" width="180">
+              <template #default="scope">
+                <el-link :to="'/blog/'+scope.row.id">
+                  {{ scope.row.title }}
+                </el-link>
+              </template>
+            </el-table-column>
+            <el-table-column prop="userNickname" label="作者" width="180">
+              <template #default="scope">
+                <el-link :to="'/home/'+scope.row.userId">
+                  {{ scope.row.userNickname }}
+                </el-link>
+              </template>
+            </el-table-column>
+            <el-table-column prop="description" label="简介" width="300"/>
+            <el-table-column label="标签" width="200">
+              <template #default="scope">
+            <span v-for="tag in tagsOfBlogs.map[scope.row.id]" :key="tag">
+              <span v-if="tag.id==0"></span>
+              <span v-else><el-tag>{{ tag.name }}</el-tag></span>
+            </span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="createDate" label="创建日期" sortable/>
+          </el-table>
+
+
+
+
+    </div>
+    <div>
+
     </div>
   </div>
 </template>
@@ -50,6 +66,7 @@ import {Search} from '@element-plus/icons-vue'
 import {getCurrentInstance, reactive, ref, watch} from "vue";
 import {ElMessage} from "element-plus";
 import axios from "@/components/request/http";
+import {get} from "@/components/request/request";
 
 
 const {proxy} = getCurrentInstance()
@@ -80,6 +97,19 @@ const getBlog = async () => {
     console.log(data)
   } catch (err) {
     console.log(err)
+  }
+}
+
+const tagsOfBlogs = reactive({
+  map: {}
+})
+
+const getTagsByBlogId = async function (blogId) {
+  try {
+    const {data} = await get(httpUrl + "/blog/" + blogId + "/tags")
+    return data
+  } catch (err) {
+
   }
 }
 
@@ -134,7 +164,7 @@ const searchBlogList = async () => {
   margin-left: 70px;
 }
 
-.inputBox>>>.el-input__wrapper{
+.inputBox >>> .el-input__wrapper {
   border-radius: 100px;
 }
 
@@ -156,8 +186,9 @@ const searchBlogList = async () => {
   background-color: rgba(0, 0, 0, 0%);
 }
 
-.el-table {
-  //color:
+.el-table{
+  height: 600px;
+  width: 1080px;
 }
 
 .videoContainer {
