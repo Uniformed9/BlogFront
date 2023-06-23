@@ -12,14 +12,14 @@
         <div style="display: flex;align-items: center;">
         <div class="user-info">
           <el-text type="info" class="not-author-name">作者:</el-text>
-          <el-text type="info" class="authorName" :key="blog.userNickname" @click="goAuthorSpace">{{blog.userNickname}}&emsp;</el-text>
+          <el-text type="info" class="authorName" :key="blog.userNickname" @click="goAuthorSpace(userid)">{{blog.userNickname}}&emsp;</el-text>
         </div>
         <div class="views-info">
           <el-text type="info" class="not-views-name">浏览量:</el-text>
           <el-text class="views-name">{{blog.views}}</el-text>
         </div>
         </div>
-        <div class="tag-info">
+        <div v-show="tagsOfBlog!=null" class="tag-info">
           <span class="not-tag-name">标签:&emsp;</span>
           <span v-for="tag in tagsOfBlog.list" :key="tag">
               <span v-if="tag.id==0">无标签</span>
@@ -152,6 +152,7 @@ const favoritesHeader=ref({
   id:"收藏夹id"
 })
 
+
 const route=useRoute();
 // console.log(route.query,route.params,"====");
 let blogid=3
@@ -160,10 +161,11 @@ let myid=1
 onMounted(()=>{
   let blogID=route.params.blogId
   let userID=route.params.userId
-  // let myID=store.state.user.id
+  let myID=store.state.user.id
+  console.log(myID)
   blogid=blogID
   userid=userID
-  // myid=myID
+   myid=myID
   getBlogDetail();
   addviewcounts();
 
@@ -191,8 +193,8 @@ onMounted(()=>{
   const addviewcounts=async () => {
     await axios.post(httpUrl+"/blog/view/"+blogid)
   }
-const goAuthorSpace=()=>{
-  router.push({path:'/index'})
+const goAuthorSpace=(userId)=>{
+  router.push("/user/"+userId)
   //路由尚未配置
 }
 const dialogTableVisible = ref(false)
