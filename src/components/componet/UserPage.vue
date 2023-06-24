@@ -100,10 +100,10 @@ const getFavorites = async () => {
     console.log(data)
     // console.log(msg)
     if (data == null) {
-      ElMessage({
-        message: msg,
-        type: 'error',
-      })
+      // ElMessage({
+      //   message: msg,
+      //   type: 'error',
+      // })
     } else {
       favoritesList.list = []
       favoritesList.list = favoritesList.list.concat(data)
@@ -135,10 +135,10 @@ const getBlogByFavorites = async () => {
     const {data, msg} = await get(httpUrl + "/user/" + userId + "/home/favorites/allblog")
     // console.log(data)
     if (data == null) {
-      ElMessage({
-        message: msg,
-        type: 'error',
-      })
+      // ElMessage({
+      //   message: msg,
+      //   type: 'error',
+      // })
     } else {
       /**
        * data是收藏夹id与收藏列表的键值对
@@ -325,16 +325,16 @@ setTimeout(async () => {
                   style="width: 100%">
                 <el-table-column prop="title" label="标题" width="180">
                   <template #default="scope">
-                    <el-link :to="'/blog/'+scope.row.id">
+                    <a :href="'/blogs/'+scope.row.userId+'/'+scope.row.id">
                       {{ scope.row.title }}
-                    </el-link>
+                    </a>
                   </template>
                 </el-table-column>
                 <el-table-column prop="userNickname" label="作者" width="180">
                   <template #default="scope">
-                    <el-link :to="'/home/'+scope.row.userId">
+                    <a  :href="'/user/'+scope.row.userId">
                       {{ scope.row.userNickname }}
-                    </el-link>
+                    </a>
                   </template>
                 </el-table-column>
                 <el-table-column prop="description" label="简介" width="300"/>
@@ -410,17 +410,17 @@ setTimeout(async () => {
                         style="width: 100%">
                       <el-table-column prop="title" label="标题" width="180">
                         <template #default="scope">
-                          <el-link :to="'/blog/'+scope.row.id">
+                          <a :href="'/blogs/'+scope.row.userId+'/'+scope.row.id">
                             {{ scope.row.title }}
-                          </el-link>
+                          </a>
                         </template>
 
                       </el-table-column>
                       <el-table-column prop="userNickname" label="作者" width="180">
                         <template #default="scope">
-                          <el-link :to="'/home/'+scope.row.userId">
+                          <a :href="'/user/'+scope.row.userId">
                             {{ scope.row.userNickname }}
-                          </el-link>
+                          </a>
                         </template>
                       </el-table-column>
                       <el-table-column prop="description" label="简介" width="300"/>
@@ -466,10 +466,10 @@ setTimeout(async () => {
           <div v-for="user in myFollowsList.list" :key="user.id">
             <span style="display: flex;align-items: center;">
 <!--              <a :href="'/#/home/1'">ok</a>-->
-              <a :herf="'/#/home/'+user.id" :underline="false">
+              <a :href="'/user/'+user.id" :underline="false">
                 <el-avatar :size="50" :src="user.avatar"/>
               </a>
-              <el-link :to="'/home/'+user.id" :underline="false">
+              <el-link :href="'/user/'+user.id" :underline="false">
                 <el-tag>{{ user.userName }}</el-tag>
               </el-link>
             </span>
@@ -481,8 +481,12 @@ setTimeout(async () => {
           <h2 class="title"><i class="iconfont icon-ziwopingjia"></i>我的粉丝</h2>
           <div v-for="user in followerList.list" :key="user.id">
             <p style="display: flex;align-items: center;">
-              <el-avatar :size="50" :src="user.avatar"/>
-              <el-tag>{{ user.userName }}</el-tag>
+              <a :href="'/user/'+user.id" :underline="false">
+                <el-avatar :size="50" :src="user.avatar"/>
+              </a>
+              <el-link :href="'/user/'+user.id" :underline="false">
+                <el-tag>{{ user.userName }}</el-tag>
+              </el-link>
             </p>
           </div>
         </div>

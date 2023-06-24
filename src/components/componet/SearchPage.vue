@@ -5,7 +5,7 @@
       <!--        <source src="@/assets/hutao.mp4" type="video/mp4">-->
       <!--      </video>-->
     </div>
-    <NavBar></NavBar>
+
     <div class="inputBox">
       <el-input v-model="inputContent"
                 class="searchinput"
@@ -17,29 +17,32 @@
       <el-button :icon="Search" circle @click="searchBlogList()"/>
     </div>
     <div class="searchResult" style="margin-top: 20px;">
-      <el-table
-          stripe
-          :data="bloglist.list"
-          :key="tableKey.key"
-          class="el-table animate__animated animate__fadeIn"
-          style="width: 80%">
-        <el-table-column prop="title" label="标题" width="180">
-          <template #default="scope">
-            <el-link :to="'/blog/'+scope.row.id">
-              {{ scope.row.title }}
-            </el-link>
-          </template>
-        </el-table-column>
-        <el-table-column prop="userNickname" label="作者" width="180">
-          <template #default="scope">
-            <el-link :to="'/home/'+scope.row.userId">
-              {{ scope.row.userNickname }}
-            </el-link>
-          </template>
-        </el-table-column>
-        <el-table-column prop="description" label="简介" width="300"/>
-        <el-table-column label="标签" width="200">
-          <template #default="scope">
+
+          <el-table
+              stripe
+              :data="bloglist.list"
+              :key="tableKey.key"
+              class=" animate__animated animate__fadeIn"
+              style="background-color: white"
+              >
+            <el-table-column prop="title" label="标题" width="180" >
+              <template #default="scope">
+                <el-link class="cursor" @click="changeToBlog(scope.row.userId,scope.row.id)">
+                  {{ scope.row.title }}
+                </el-link>
+              </template>
+            </el-table-column>
+            <el-table-column prop="userNickname" label="作者" width="180">
+              <template #default="scope">
+                <el-link class="cursor" @click="changeToUser(scope.row.userId)">
+                  {{ scope.row.userNickname }}
+                </el-link>
+              </template>
+
+            </el-table-column>
+            <el-table-column prop="description" label="简介" width="300"/>
+            <el-table-column label="标签" width="200">
+              <template #default="scope">
             <span v-for="tag in tagsOfBlogs.map[scope.row.id]" :key="tag">
               <span v-if="tag.id==0"></span>
               <span v-else><el-tag>{{ tag.name }}</el-tag></span>
@@ -65,9 +68,8 @@ import {getCurrentInstance, reactive, ref, watch} from "vue";
 import {ElMessage} from "element-plus";
 import axios from "@/components/request/http";
 import {get} from "@/components/request/request";
-import router from "@/components/router/router";
-import {get} from "@/components/request/request";
 import hot from "@/assets/hot.jpg"
+import router from "@/components/router/router";
 
 
 const {proxy} = getCurrentInstance()
@@ -138,12 +140,15 @@ const searchBlogList = async () => {
         type: 'success',
       })
       bloglist.list.splice(0)
-      console.log(bloglist)
-      tableKey.key = Math.random()
       bloglist.list = bloglist.list.concat(data.data)
-      // that.$set(that, bloglist, data.data)
       tableKey.key = Math.random()
       console.log(bloglist)
+      for (const blog of bloglist.list) {
+        console.log(blog)
+        const temp = await getTagsByBlogId(blog['id'])
+        tagsOfBlogs.map[blog['id']] = temp == null ? [{"id": 0}] : temp
+        viewOfBlogs.map[blog['id']] = blog['views'] == null ? null : blog['views']
+      }
       return bloglist
     }
   } catch (err) {
