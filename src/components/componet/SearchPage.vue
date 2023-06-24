@@ -47,17 +47,16 @@
               <span v-if="tag.id==0"></span>
               <span v-else><el-tag>{{ tag.name }}</el-tag></span>
             </span>
-              </template>
-            </el-table-column>
-            <el-table-column prop="createDate" label="创建日期" sortable/>
-          </el-table>
-
-
-
-
-    </div>
-    <div>
-
+          </template>
+        </el-table-column>
+        <el-table-column label="" width="50">
+          <template #default="scope">
+            <!--            <h1>{{viewOfBlogs.map}}</h1>-->
+            <img :src="hot" v-if="viewOfBlogs.map[scope.row.id]>10"/>
+          </template>
+        </el-table-column>
+        <el-table-column prop="createDate" label="创建日期" sortable/>
+      </el-table>
     </div>
   </div>
 </template>
@@ -70,6 +69,7 @@ import {ElMessage} from "element-plus";
 import axios from "@/components/request/http";
 import {get} from "@/components/request/request";
 import router from "@/components/router/router";
+import hot from "@/assets/hot.jpg"
 
 
 const {proxy} = getCurrentInstance()
@@ -112,6 +112,9 @@ const getBlog = async () => {
 const tagsOfBlogs = reactive({
   map: {}
 })
+const viewOfBlogs = reactive({
+  map: {}
+})
 
 const getTagsByBlogId = async function (blogId) {
   try {
@@ -124,7 +127,7 @@ const getTagsByBlogId = async function (blogId) {
 
 const searchBlogList = async () => {
   try {
-    const {data, msg} = await axios.get(httpUrl + "/blog/search/" + inputContent.value)
+    const {data, msg} = await axios.get(httpUrl + "/blog/search/" + inputContent.value.trim())
     console.log("in function:" + inputContent.value)
     if (data == null) {
       ElMessage({
@@ -137,12 +140,15 @@ const searchBlogList = async () => {
         type: 'success',
       })
       bloglist.list.splice(0)
-      console.log(bloglist)
-      tableKey.key = Math.random()
       bloglist.list = bloglist.list.concat(data.data)
-      // that.$set(that, bloglist, data.data)
       tableKey.key = Math.random()
       console.log(bloglist)
+      for (const blog of bloglist.list) {
+        console.log(blog)
+        const temp = await getTagsByBlogId(blog['id'])
+        tagsOfBlogs.map[blog['id']] = temp == null ? [{"id": 0}] : temp
+        viewOfBlogs.map[blog['id']] = blog['views'] == null ? null : blog['views']
+      }
       return bloglist
     }
   } catch (err) {
