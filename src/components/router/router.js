@@ -5,9 +5,10 @@ import UserPage from "@/components/componet/UserPage.vue";
 import BlogPage from "@/components/componet/BlogPage.vue";
 import IndexPage from "@/components/componet/IndexPage.vue";
 import BlogCreate from "@/components/componet/BlogCreate.vue";
-import UserSpace from "@/components/componet/UserSpace.vue";
+
 import SearchPage from "../componet/SearchPage.vue";
 import BlogDetail from "@/components/BlogDetail/BlogDetail.vue";
+import BlogUpdate from "@/components/componet/BlogUpdate.vue";
 const routes = [
     {
         path: "/",
@@ -21,12 +22,10 @@ const routes = [
             {path: '/about', component: UserPage},
             {path: '/blog', component: BlogPage},
             {path:"/user/:userId", component: UserPage},
+            {path:'/search',component:SearchPage},
         ]
     },
-    {
-        path: "/search",
-        component: SearchPage
-    },
+
     {
         path:"/blogs/:userId/:blogId",
         name:"blogDetail",
@@ -36,6 +35,11 @@ const routes = [
         path: "/BlogCreate",
         name:"BlogCreate",
         component: BlogCreate
+    },
+    {
+        path: "/BlogUpdate/:blogId",
+        name:"BlogUpdate",
+        component: BlogUpdate
     },
 
 ];

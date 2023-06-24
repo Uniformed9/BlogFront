@@ -2,10 +2,11 @@
 import { getCurrentInstance, onMounted, reactive, ref} from "vue";
 import axios from "@/components/request/http";
 import {useStore} from "vuex";
-import {useRouter} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import {ElMessage} from "element-plus";
 const router=useRouter()
 const store=useStore()
+const route=useRoute()
 // 传入标题,描述,内容,标签
 const param=reactive({
     title:'',
@@ -52,12 +53,23 @@ const submit=async (param)=>{
 }
 
 onMounted(()=>{
-        axios({
-            url: httpUrl+"/tag/getAll",
-            method: 'get',
-        }).then(res => {
-            tags.value=res.data.data
-        })
+    blogId.value=route.params.blogId
+    axios({
+        url: httpUrl+"/tag/getAll",
+        method: 'get',
+    }).then(res => {
+        tags.value=res.data.data
+    })
+
+    axios({
+        url: httpUrl+"/blog/"+blogId.value,
+        method: 'get'
+    }).then(res=>{
+        const {data}=res.data
+        param.content=data.content
+        param.title=data.title
+        param.description=data.description
+    })
 })
 const newLabel=async (name)=>{
     console.log(name)
@@ -133,19 +145,21 @@ const newLabel=async (name)=>{
         <el-container>
             <el-footer>
                 <el-select
-                    v-model="value1"
-                    multiple
-                    placeholder="Select"
-                    style="width: 240px"
-                    v-if="tags.length>=1"
+                        v-model="value1"
+                        multiple
+                        placeholder="标签"
+                        style="width: 240px"
+                        v-if="tags.length>=1"
                 >
                     <el-option
-                        v-for="item in tags"
-                        :key="item.name"
-                        :label="item.name"
-                        :value="item.name"
+                            v-for="item in tags"
+                            :key="item.name"
+                            :label="item.name"
+                            :value="item.name"
                     />
+
                 </el-select>
+                <el-button style="margin-left: 3px" type="success" @click="dialogTableVisible=true">新建标签</el-button>
                 <el-row justify="end">
                     <el-button @click="back">返回</el-button>
                     <el-button type="primary" @click="submit(param)">发布</el-button>

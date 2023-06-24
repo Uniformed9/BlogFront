@@ -5,7 +5,7 @@
       <!--        <source src="@/assets/hutao.mp4" type="video/mp4">-->
       <!--      </video>-->
     </div>
-    <NavBar></NavBar>
+
     <div class="inputBox">
       <el-input v-model="inputContent"
                 class="searchinput"
@@ -17,44 +17,47 @@
       <el-button :icon="Search" circle @click="searchBlogList()"/>
     </div>
     <div class="searchResult" style="margin-top: 20px;">
-      <el-table
-          stripe
-          :data="bloglist.list"
-          :key="tableKey.key"
-          class="el-table animate__animated animate__fadeIn"
-          style="width: 80%">
-        <el-table-column prop="title" label="标题" width="180">
-          <template #default="scope">
-<!--            <h1>{{// '/blogs/'+scope.row.userId+'/'+scope.row.id}}</h1>-->
-            <a  :href="'/blogs/'+scope.row.userId+'/'+scope.row.id">
-              {{ scope.row.title }}
-            </a>
-          </template>
-        </el-table-column>
-        <el-table-column prop="userNickname" label="作者" width="180">
-          <template #default="scope">
-            <a :href="'/user/'+scope.row.userId">
-              {{ scope.row.userNickname }}
-            </a>
-          </template>
-        </el-table-column>
-        <el-table-column prop="description" label="简介" width="300"/>
-        <el-table-column label="标签" width="200">
-          <template #default="scope">
+
+          <el-table
+              stripe
+              :data="bloglist.list"
+              :key="tableKey.key"
+              class=" animate__animated animate__fadeIn"
+              style="background-color: white"
+              >
+            <el-table-column prop="title" label="标题" width="180" >
+              <template #default="scope">
+                <el-link class="cursor" @click="changeToBlog(scope.row.userId,scope.row.id)">
+                  {{ scope.row.title }}
+                </el-link>
+              </template>
+            </el-table-column>
+            <el-table-column prop="userNickname" label="作者" width="180">
+              <template #default="scope">
+                <el-link class="cursor" @click="changeToUser(scope.row.userId)">
+                  {{ scope.row.userNickname }}
+                </el-link>
+              </template>
+
+            </el-table-column>
+            <el-table-column prop="description" label="简介" width="300"/>
+            <el-table-column label="标签" width="200">
+              <template #default="scope">
             <span v-for="tag in tagsOfBlogs.map[scope.row.id]" :key="tag">
               <span v-if="tag.id==0"></span>
               <span v-else><el-tag>{{ tag.name }}</el-tag></span>
             </span>
-          </template>
-        </el-table-column>
-        <el-table-column label="" width="50">
-          <template #default="scope">
-            <!--            <h1>{{viewOfBlogs.map}}</h1>-->
-            <img :src="hot" v-if="viewOfBlogs.map[scope.row.id]>0"/>
-          </template>
-        </el-table-column>
-        <el-table-column prop="createDate" label="创建日期" sortable/>
-      </el-table>
+              </template>
+            </el-table-column>
+            <el-table-column prop="createDate" label="创建日期" sortable/>
+          </el-table>
+
+
+
+
+    </div>
+    <div>
+
     </div>
   </div>
 </template>
@@ -66,7 +69,7 @@ import {getCurrentInstance, reactive, ref, watch} from "vue";
 import {ElMessage} from "element-plus";
 import axios from "@/components/request/http";
 import {get} from "@/components/request/request";
-import hot from "@/assets/hot.jpg"
+import router from "@/components/router/router";
 
 
 const {proxy} = getCurrentInstance()
@@ -90,7 +93,13 @@ setTimeout(async () => {
   await searchBlogList(inputContent)
   tableKey.key = Math.random()
 }, 10)
-
+const changeToBlog=(userId,id)=>{
+    console.log(userId,id)
+    router.push("/blogs/"+userId+"/"+id)
+}
+const changeToUser=(userId)=>{
+    router.push("/user/"+userId)
+}
 const getBlog = async () => {
   try {
     const {data} = await axios.get(httpUrl + "/blog/" + 20)
@@ -101,9 +110,6 @@ const getBlog = async () => {
 }
 
 const tagsOfBlogs = reactive({
-  map: {}
-})
-const viewOfBlogs = reactive({
   map: {}
 })
 
@@ -118,7 +124,7 @@ const getTagsByBlogId = async function (blogId) {
 
 const searchBlogList = async () => {
   try {
-    const {data, msg} = await axios.get(httpUrl + "/blog/search/" + inputContent.value.trim())
+    const {data, msg} = await axios.get(httpUrl + "/blog/search/" + inputContent.value)
     console.log("in function:" + inputContent.value)
     if (data == null) {
       ElMessage({
@@ -131,15 +137,12 @@ const searchBlogList = async () => {
         type: 'success',
       })
       bloglist.list.splice(0)
+      console.log(bloglist)
+      tableKey.key = Math.random()
       bloglist.list = bloglist.list.concat(data.data)
+      // that.$set(that, bloglist, data.data)
       tableKey.key = Math.random()
       console.log(bloglist)
-      for (const blog of bloglist.list) {
-        console.log(blog)
-        const temp = await getTagsByBlogId(blog['id'])
-        tagsOfBlogs.map[blog['id']] = temp == null ? [{"id": 0}] : temp
-        viewOfBlogs.map[blog['id']] = blog['views'] == null ? null : blog['views']
-      }
       return bloglist
     }
   } catch (err) {
@@ -150,6 +153,10 @@ const searchBlogList = async () => {
 </script>
 
 <style scoped>
+.cursor:hover{
+    color:deepskyblue;
+    cursor: pointer;
+}
 .all {
   background-color: rgba(0, 0, 0, 0%);
 }
@@ -190,6 +197,11 @@ const searchBlogList = async () => {
   display: flex;
   justify-content: center;
   background-color: rgba(0, 0, 0, 0%);
+}
+
+.el-table{
+  height: 600px;
+  width: 1080px;
 }
 
 .videoContainer {

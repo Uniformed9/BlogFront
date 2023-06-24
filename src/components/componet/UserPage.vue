@@ -100,10 +100,10 @@ const getFavorites = async () => {
     console.log(data)
     // console.log(msg)
     if (data == null) {
-      ElMessage({
-        message: msg,
-        type: 'error',
-      })
+      // ElMessage({
+      //   message: msg,
+      //   type: 'error',
+      // })
     } else {
       favoritesList.list = []
       favoritesList.list = favoritesList.list.concat(data)
@@ -135,10 +135,10 @@ const getBlogByFavorites = async () => {
     const {data, msg} = await get(httpUrl + "/user/" + userId + "/home/favorites/allblog")
     // console.log(data)
     if (data == null) {
-      ElMessage({
-        message: msg,
-        type: 'error',
-      })
+      // ElMessage({
+      //   message: msg,
+      //   type: 'error',
+      // })
     } else {
       /**
        * data是收藏夹id与收藏列表的键值对
