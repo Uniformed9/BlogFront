@@ -449,9 +449,9 @@ setTimeout(async () => {
           <div v-for="user in myFollowsList.list" :key="user.id">
             <span style="display: flex;align-items: center;">
 <!--              <a :href="'/#/home/1'">ok</a>-->
-              <a :href="'/user/'+user.id" :underline="false">
-                <el-avatar :size="50" :src="user.avatar"/>
-              </a>
+<!--              <a :href="'/user/'+user.id" :underline="false">-->
+<!--                <el-avatar :size="50" :src="user.avatar"/>-->
+<!--              </a>-->
               <el-link :href="'/user/'+user.id" :underline="false">
                 <el-tag>{{ user.userName }}</el-tag>
               </el-link>
@@ -464,9 +464,9 @@ setTimeout(async () => {
           <h2 class="title"><i class="iconfont icon-ziwopingjia"></i>我的粉丝</h2>
           <div v-for="user in followerList.list" :key="user.id">
             <p style="display: flex;align-items: center;">
-              <a :href="'/user/'+user.id" :underline="false">
-                <el-avatar :size="50" :src="user.avatar"/>
-              </a>
+<!--              <a :href="'/user/'+user.id" :underline="false">-->
+<!--                <el-avatar :size="50" :src="user.avatar"/>-->
+<!--              </a>-->
               <el-link :href="'/user/'+user.id" :underline="false">
                 <el-tag>{{ user.userName }}</el-tag>
               </el-link>

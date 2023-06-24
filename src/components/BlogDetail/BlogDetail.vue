@@ -31,7 +31,7 @@
         </div>
       </div>
       <div class="content">
-      <div><span v-html="blog.content"></span></div>
+      <div style="white-space: pre-line"><span v-html="blog.content"></span></div>
     </div>
       <div class="love-button">
         <el-button class="button" text @click="getFavoriteList();dialogTableVisible = true" icon="star" circle>
@@ -152,7 +152,7 @@ const blog=ref({
 const favorites=ref([])
 const favoritesHeader=ref({
   name:"收藏夹名称",
-  id:"收藏夹id"
+  // id:"收藏夹id"
 })
 
 

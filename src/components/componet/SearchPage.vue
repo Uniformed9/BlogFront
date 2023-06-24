@@ -200,7 +200,7 @@ const searchBlogList = async () => {
 }
 
 .el-table{
-  height: 600px;
+  height: 688px;
   width: 1080px;
 }
 
