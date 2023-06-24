@@ -208,6 +208,13 @@ const deleteFavorites = async (favoritesId) => {
   await getFavorites()
   await getBlogByFavorites()
 }
+const changeToBlog=(userId,id)=>{
+    console.log(userId,id)
+    router.push("/blogs/"+userId+"/"+id)
+}
+const changeToUser=(userId)=>{
+    router.push("/user/"+userId)
+}
 const updateBlog=(blogId)=>{
     //到新的页面然后
     router.push("/BlogUpdate/"+blogId)
@@ -325,16 +332,17 @@ setTimeout(async () => {
                   style="width: 100%">
                 <el-table-column prop="title" label="标题" width="180">
                   <template #default="scope">
-                    <a :href="'/blogs/'+scope.row.userId+'/'+scope.row.id">
-                      {{ scope.row.title }}
-                    </a>
+                      <el-link class="cursor" @click="changeToBlog(scope.row.userId,scope.row.id)">
+                          {{ scope.row.title }}
+                      </el-link>
+
                   </template>
                 </el-table-column>
                 <el-table-column prop="userNickname" label="作者" width="180">
                   <template #default="scope">
-                    <a  :href="'/user/'+scope.row.userId">
-                      {{ scope.row.userNickname }}
-                    </a>
+                      <el-link class="cursor" @click="changeToUser(scope.row.userId)">
+                          {{ scope.row.userNickname }}
+                      </el-link>
                   </template>
                 </el-table-column>
                 <el-table-column prop="description" label="简介" width="300"/>

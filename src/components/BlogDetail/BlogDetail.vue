@@ -177,8 +177,7 @@ onMounted(()=>{
 })
 
   const getBlogDetail=async ()=> {
-    // console.log(blogid)
-    // console.log(httpUrl)
+
     const {data,msg}=await axios.get(httpUrl+"/blog/"+blogid)
     console.log("data", data)
     console.log("msg", msg)

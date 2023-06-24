@@ -82,7 +82,6 @@ const newLabel=async (name)=>{
             tags.value=res.data.data
         })
     })
-
 }
 </script>
 

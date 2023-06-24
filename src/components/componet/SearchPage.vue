@@ -68,8 +68,8 @@ import {getCurrentInstance, reactive, ref, watch} from "vue";
 import {ElMessage} from "element-plus";
 import axios from "@/components/request/http";
 import {get} from "@/components/request/request";
-import hot from "@/assets/hot.jpg"
 import router from "@/components/router/router";
+import hot from "@/assets/hot.jpg"
 
 
 const {proxy} = getCurrentInstance()
@@ -140,7 +140,10 @@ const searchBlogList = async () => {
         type: 'success',
       })
       bloglist.list.splice(0)
+      console.log(bloglist)
+      tableKey.key = Math.random()
       bloglist.list = bloglist.list.concat(data.data)
+      // that.$set(that, bloglist, data.data)
       tableKey.key = Math.random()
       console.log(bloglist)
       for (const blog of bloglist.list) {

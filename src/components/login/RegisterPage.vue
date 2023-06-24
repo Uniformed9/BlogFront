@@ -3,12 +3,12 @@
     <el-dialog class="dialog" title="请登录" v-model="registorFormVisiable" @close="resetForm" width="400px" center>
         <el-form ref="FormRef" :model="Form" :rules="FormRules" class="form" label-width="80px" label-position="left">
             <!--        昵称-->
-            <el-form-item label="昵称" prop="nickname">
-                <el-input v-model="Form.nickname"></el-input>
+            <el-form-item label="昵称" prop="nickName">
+                <el-input v-model="Form.nickName"></el-input>
             </el-form-item>
             <!--        用户名-->
-            <el-form-item label="用户名" prop="username">
-                <el-input v-model="Form.username"></el-input>
+            <el-form-item label="用户名" prop="userName">
+                <el-input v-model="Form.userName"></el-input>
             </el-form-item>
             <!--        密码-->
             <el-form-item label="密码" prop="password">
@@ -19,44 +19,44 @@
                 <el-input v-model="Form.email"></el-input>
             </el-form-item>
             <!--        头像-->
-            <el-form-item prop="avatar" label="头像">
-                <el-upload
-                        class="avatar-uploader"
-                        ref="upload"
-                        action="http://hikari.top:8090/upload"
-                        :limit="1"
-                        :show-file-list="false"
-                        :on-remove="handleRemove"
-                        :on-success="handleSuccess"
-                        :before-upload="beforeAvatarUpload">
-                    <img v-if="dialogImageUrl" :src="dialogImageUrl" class="avatar">
-                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                </el-upload>
+            <el-form-item label="头像" style="padding:0 1em">
+                <input
+                    type="file"
+                    class="upload_file"
+                    @change="upload($event)"
+                    accept=".png,.jpg"
+                />
             </el-form-item>
+
+
             <el-form-item style="text-align: right">
                 <el-button @click="resetForm">取消</el-button>
                 <el-button type="primary" @click="userRegister">注册</el-button>
             </el-form-item>
         </el-form>
+
     </el-dialog>
 </template>
 <script setup>
 import {useMapState} from "@/components/common/useMapState";
 import {useStore} from "vuex";
-import {ref} from "vue";
+import {reactive, ref} from "vue";
 import {ElMessage} from "element-plus";
+import {Upload} from "@element-plus/icons-vue";
+import axios from "@/components/request/http";
 
-
+const dialogFormVisible=ref(false)
 const {registorFormVisiable}=useMapState(['registorFormVisiable'])
 const dialogImageUrl=ref('')
 const store =useStore()
 const FormRef=ref()
-const Form={
-    nickname: '',
-    username: '',
+const Form=reactive({
+    nickName: '',
+    userName: '',
     password: '',
-    email: ''
-}
+    email: '',
+})
+let params = new FormData();
 const FormRules= {
     // 验证用户是否合法
     username: [
@@ -85,6 +85,15 @@ const handleSuccess=async (res)=> {
     // console.log(res.data)
     dialogImageUrl.value = res.data
 }
+const upload=(e)=>{
+    const file = e.target.files[0];
+    console.log(file);
+    params.append("file", file);
+    params.append("userName",Form.userName);
+    params.append("password",Form.password);
+    params.append("nickName",Form.nickName);
+    params.append("email",Form.email);
+}
 const handleRemove=()=> {
     dialogImageUrl.value = ''
 }
@@ -100,7 +109,25 @@ const beforeAvatarUpload=(file)=> {
     return isLt2M;
 }
 //注册功能
-const userRegister=()=>{
+const userRegister=async ()=>{
+    console.log(params)
+
+    axios.post('http://localhost:8070/user/register', params, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    }).then(response => {
+
+        const {data}=response.data
+        console.log(data);
+        ElMessage({
+            type:"success",
+            message:"注册成功",
+        })
+        store.commit("cancelRFV")
+    }).catch(error => {
+        console.error(error);
+    });
 
 }
 
