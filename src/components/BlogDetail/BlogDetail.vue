@@ -31,7 +31,7 @@
         </div>
       </div>
       <div class="content">
-      <div style="white-space: pre-line"><span v-html="blog.content"></span></div>
+      <div style="white-space: pre-wrap;float: left;" align="left"><span style="float: left;" v-html="blog.content"></span></div>
     </div>
       <div class="love-button">
         <el-button class="button" text @click="getFavoriteList();dialogTableVisible = true" icon="star" circle>
